@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='239.53pt' height='283.46pt' viewBox='0 0 239.53 283.46'>
+<defs>
+  <style type='text/css'><![CDATA[
+    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+    .svglite text {
+      white-space: pre;
+    }
+  ]]></style>
+</defs>
+<rect width='100%' height='100%' style='stroke: none; fill: none;'/>
+<defs>
+  <clipPath id='cpMC4wMHwyMzkuNTN8MC4wMHwyODMuNDY='>
+    <rect x='0.00' y='0.00' width='239.53' height='283.46' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHwyMzkuNTN8MC4wMHwyODMuNDY=)'>
+</g>
+<defs>
+  <clipPath id='cpMC4wMHwyMzkuNTN8NDkuMDV8MjM0LjQx'>
+    <rect x='0.00' y='49.05' width='239.53' height='185.36' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMC4wMHwyMzkuNTN8NDkuMDV8MjM0LjQx)'>
+</g>
+<g clip-path='url(#cpMC4wMHwyMzkuNTN8MC4wMHwyODMuNDY=)'>
+</g>
+<defs>
+  <clipPath id='cpMTkuNjN8MTQ5LjA0fDcyLjA2fDIwMS40Ng=='>
+    <rect x='19.63' y='72.06' width='129.41' height='129.41' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpMTkuNjN8MTQ5LjA0fDcyLjA2fDIwMS40Ng==)'>
+<polygon points='84.33,117.13 84.33,115.34 84.33,113.56 84.33,111.77 84.33,109.99 84.33,108.20 84.33,106.42 84.33,104.63 84.33,102.85 84.33,101.06 84.33,99.28 84.33,97.49 84.33,95.71 84.33,93.92 84.33,92.14 84.33,90.35 84.33,88.57 84.33,86.78 84.33,85.00 82.38,85.03 80.43,85.14 78.49,85.33 76.56,85.58 74.63,85.91 74.97,87.67 75.30,89.42 75.64,91.17 75.97,92.93 76.31,94.68 76.64,96.43 76.98,98.19 77.31,99.94 77.64,101.69 77.98,103.45 78.31,105.20 78.65,106.95 78.98,108.71 79.32,110.46 79.65,112.21 79.99,113.97 80.32,115.72 80.65,117.47 82.49,117.21 84.33,117.13 ' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D;' />
+<polygon points='80.65,117.47 80.32,115.72 79.99,113.97 79.65,112.21 79.32,110.46 78.98,108.71 78.65,106.95 78.31,105.20 77.98,103.45 77.64,101.69 77.31,99.94 76.98,98.19 76.64,96.43 76.31,94.68 75.97,92.93 75.64,91.17 75.30,89.42 74.97,87.67 74.63,85.91 72.91,86.27 71.20,86.69 69.50,87.17 67.82,87.70 66.16,88.29 64.52,88.94 62.91,89.64 61.32,90.39 59.75,91.20 58.22,92.07 56.71,92.98 55.24,93.95 53.80,94.96 52.39,96.03 51.03,97.14 49.70,98.29 48.41,99.49 47.16,100.74 45.96,102.02 44.80,103.35 43.68,104.71 42.62,106.12 41.60,107.55 40.63,109.02 39.71,110.53 38.84,112.06 38.03,113.62 37.27,115.21 36.56,116.83 35.91,118.46 35.32,120.12 34.78,121.80 34.30,123.49 33.88,125.20 33.51,126.93 33.21,128.66 32.96,130.41 32.78,132.16 32.65,133.91 32.58,135.68 32.58,137.44 32.63,139.20 32.74,140.96 32.91,142.71 33.15,144.45 33.44,146.19 33.79,147.92 34.20,149.63 34.66,151.33 35.19,153.01 35.77,154.67 36.41,156.32 37.10,157.94 37.85,159.53 38.65,161.10 39.51,162.64 40.41,164.15 41.37,165.63 42.38,167.07 43.43,168.48 44.54,169.86 45.69,171.19 46.88,172.49 48.12,173.74 49.40,174.95 50.72,176.12 52.08,177.24 53.47,178.31 54.90,179.34 56.37,180.32 57.87,181.24 59.40,182.12 60.26,180.55 61.12,178.99 61.98,177.43 62.84,175.86 63.70,174.30 64.56,172.73 65.42,171.17 66.28,169.61 67.14,168.04 68.00,166.48 68.86,164.91 69.72,163.35 70.58,161.79 71.44,160.22 72.30,158.66 73.16,157.09 74.01,155.53 74.87,153.96 73.35,153.04 71.92,151.97 70.60,150.79 69.38,149.48 68.29,148.08 67.33,146.58 66.51,144.99 65.84,143.35 65.32,141.64 64.95,139.90 64.75,138.13 64.70,136.35 64.82,134.57 65.10,132.81 65.54,131.08 66.13,129.40 66.87,127.78 67.76,126.24 68.78,124.78 69.93,123.42 71.20,122.17 72.57,121.04 74.05,120.04 75.60,119.17 77.23,118.45 78.92,117.89 80.65,117.47 ' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #7CAE00;' />
+<polygon points='74.87,153.96 74.01,155.53 73.16,157.09 72.30,158.66 71.44,160.22 70.58,161.79 69.72,163.35 68.86,164.91 68.00,166.48 67.14,168.04 66.28,169.61 65.42,171.17 64.56,172.73 63.70,174.30 62.84,175.86 61.98,177.43 61.12,178.99 60.26,180.55 59.40,182.12 60.96,182.94 62.55,183.72 64.17,184.43 65.81,185.09 67.47,185.70 69.15,186.25 70.85,186.74 72.57,187.17 74.30,187.54 76.04,187.85 77.79,188.11 79.55,188.30 81.31,188.43 83.08,188.51 84.85,188.52 86.62,188.47 88.38,188.36 90.14,188.19 91.90,187.97 93.64,187.68 95.37,187.33 97.10,186.92 98.80,186.46 100.49,185.93 102.16,185.35 103.81,184.72 105.44,184.02 107.04,183.27 108.62,182.47 110.17,181.62 111.68,180.71 113.17,179.75 114.62,178.74 116.04,177.68 117.42,176.57 118.76,175.42 120.06,174.22 121.32,172.98 122.53,171.69 123.70,170.37 124.83,169.00 125.91,167.60 126.94,166.16 127.92,164.69 128.84,163.18 129.72,161.65 130.54,160.08 131.31,158.49 132.03,156.87 132.69,155.23 133.29,153.57 133.84,151.88 134.32,150.18 134.75,148.47 135.12,146.74 135.44,145.00 135.69,143.25 133.92,143.02 132.15,142.80 130.38,142.58 128.60,142.35 126.83,142.13 125.06,141.90 123.29,141.68 121.52,141.46 119.75,141.23 117.98,141.01 116.21,140.79 114.44,140.56 112.67,140.34 110.90,140.11 109.13,139.89 107.35,139.67 105.58,139.44 103.81,139.22 103.50,141.01 103.02,142.77 102.39,144.48 101.60,146.11 100.65,147.67 99.57,149.14 98.36,150.50 97.03,151.74 95.59,152.85 94.05,153.82 92.43,154.65 90.74,155.32 88.99,155.83 87.20,156.18 85.39,156.36 83.57,156.38 81.76,156.22 79.96,155.90 78.21,155.41 76.51,154.77 74.87,153.96 ' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
+<polygon points='103.81,139.22 105.58,139.44 107.35,139.67 109.13,139.89 110.90,140.11 112.67,140.34 114.44,140.56 116.21,140.79 117.98,141.01 119.75,141.23 121.52,141.46 123.29,141.68 125.06,141.90 126.83,142.13 128.60,142.35 130.38,142.58 132.15,142.80 133.92,143.02 135.69,143.25 135.88,141.50 136.01,139.75 136.08,137.99 136.09,136.24 136.05,134.48 135.94,132.73 135.77,130.98 135.55,129.24 135.26,127.51 134.92,125.79 134.52,124.08 134.06,122.38 133.54,120.70 132.97,119.04 132.34,117.40 131.66,115.78 130.92,114.19 130.12,112.62 129.28,111.08 128.38,109.57 127.44,108.10 126.44,106.65 125.39,105.24 124.30,103.86 123.16,102.53 121.98,101.23 120.75,99.97 119.48,98.76 118.17,97.59 116.82,96.46 115.44,95.39 114.02,94.35 112.56,93.37 111.07,92.44 109.55,91.56 108.01,90.73 106.43,89.95 104.83,89.23 103.21,88.56 101.56,87.95 99.90,87.39 98.21,86.89 96.51,86.45 94.80,86.07 93.07,85.74 91.34,85.47 89.59,85.26 87.84,85.12 86.09,85.03 84.33,85.00 84.33,86.78 84.33,88.57 84.33,90.35 84.33,92.14 84.33,93.92 84.33,95.71 84.33,97.49 84.33,99.28 84.33,101.06 84.33,102.85 84.33,104.63 84.33,106.42 84.33,108.20 84.33,109.99 84.33,111.77 84.33,113.56 84.33,115.34 84.33,117.13 86.08,117.20 87.82,117.44 89.53,117.83 91.20,118.36 92.81,119.05 94.36,119.88 95.82,120.84 97.20,121.92 98.47,123.13 99.63,124.45 100.66,125.86 101.57,127.36 102.34,128.93 102.97,130.57 103.44,132.25 103.77,133.98 103.94,135.72 103.95,137.47 103.81,139.22 ' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #C77CFF;' />
+<text x='80.97' y='97.22' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='22.68px' lengthAdjust='spacingAndGlyphs'>Fear</text>
+<text x='80.97' y='113.12' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='15.94px' lengthAdjust='spacingAndGlyphs'>3%</text>
+<text x='49.07' y='127.18' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='45.96px' lengthAdjust='spacingAndGlyphs'>Homicide</text>
+<text x='49.07' y='143.07' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='22.08px' lengthAdjust='spacingAndGlyphs'>39%</text>
+<text x='100.54' y='164.57' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='36.17px' lengthAdjust='spacingAndGlyphs'>Suicide</text>
+<text x='100.54' y='180.46' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='22.08px' lengthAdjust='spacingAndGlyphs'>31%</text>
+<text x='111.11' y='109.15' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='63.55px' lengthAdjust='spacingAndGlyphs'>Violent crime</text>
+<text x='111.11' y='125.05' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='22.08px' lengthAdjust='spacingAndGlyphs'>27%</text>
+<text x='84.33' y='124.81' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='85.85px' lengthAdjust='spacingAndGlyphs'>Interpersonal and</text>
+<text x='84.33' y='140.71' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='60.70px' lengthAdjust='spacingAndGlyphs'>Self-Inflicted</text>
+<text x='84.33' y='156.61' text-anchor='middle' style='font-size: 11.04px; font-family: "Arial";' textLength='42.11px' lengthAdjust='spacingAndGlyphs'>Violence</text>
+<text x='142.57' y='139.09' text-anchor='middle' style='font-size: 6.50px;fill: #444444; font-family: "Arial";' textLength='7.23px' lengthAdjust='spacingAndGlyphs'>25</text>
+<text x='84.33' y='197.32' text-anchor='middle' style='font-size: 6.50px;fill: #444444; font-family: "Arial";' textLength='7.23px' lengthAdjust='spacingAndGlyphs'>50</text>
+<text x='26.10' y='139.09' text-anchor='middle' style='font-size: 6.50px;fill: #444444; font-family: "Arial";' textLength='7.23px' lengthAdjust='spacingAndGlyphs'>75</text>
+<text x='84.33' y='80.86' text-anchor='middle' style='font-size: 6.50px;fill: #444444; font-family: "Arial";' textLength='16.26px' lengthAdjust='spacingAndGlyphs'>0/100</text>
+</g>
+<g clip-path='url(#cpMC4wMHwyMzkuNTN8MC4wMHwyODMuNDY=)'>
+<rect x='166.18' y='105.65' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D;' />
+<rect x='166.18' y='122.93' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #7CAE00;' />
+<rect x='166.18' y='140.21' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
+<rect x='166.18' y='157.49' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #C77CFF;' />
+<text x='188.23' y='116.08' style='font-size: 7.00px; font-family: "Arial";' textLength='14.40px' lengthAdjust='spacingAndGlyphs'>Fear</text>
+<text x='188.23' y='133.36' style='font-size: 7.00px; font-family: "Arial";' textLength='29.18px' lengthAdjust='spacingAndGlyphs'>Homicide</text>
+<text x='188.23' y='150.64' style='font-size: 7.00px; font-family: "Arial";' textLength='22.96px' lengthAdjust='spacingAndGlyphs'>Suicide</text>
+<text x='188.23' y='167.92' style='font-size: 7.00px; font-family: "Arial";' textLength='40.33px' lengthAdjust='spacingAndGlyphs'>Violent crime</text>
+<text x='5.48' y='63.84' style='font-size: 13.00px; font-family: "Arial";' textLength='226.91px' lengthAdjust='spacingAndGlyphs'>Interpersonal and Self-inflicted violence</text>
+<text x='5.48' y='227.46' style='font-size: 7.00px;fill: #888686; font-family: "Arial";' textLength='77.30px' lengthAdjust='spacingAndGlyphs'>Source: IEP Calculations</text>
+</g>
+</svg>

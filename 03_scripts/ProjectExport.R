@@ -69,8 +69,8 @@ f_TrainingSavePlots <- function(chart_title, plot_name) {
   
   if (chart_title["type"] == "Chart") {
     # Looping through the three chart sizes
-    for (size_name in names(TRAINING_CHARTS)) {
-      size <- TRAINING_CHARTS[[size_name]]
+    for (size_name in names(CHARTS)) {
+      size <- CHARTS[[size_name]]
       file_base_name <- paste0(chart_title["sheet"], "_", size_name)
       
       # Save as PNG in CHARTS_PATH with transparency
@@ -101,8 +101,8 @@ f_TrainingSavePlots <- function(chart_title, plot_name) {
   
   if (chart_title["type"] == "Diagram") {
     # Looping through the three chart sizes
-    for (size_name in names(TRAINING_CHARTS)) {
-      size <- TRAINING_CHARTS[[size_name]]
+    for (size_name in names(CHARTS)) {
+      size <- CHARTS[[size_name]]
       file_base_name <- paste0(chart_title["sheet"], "_", size_name)
       
       # Save as SVG in ONEDRIVE_PATH

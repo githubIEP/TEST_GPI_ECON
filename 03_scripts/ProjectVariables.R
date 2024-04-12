@@ -1,6 +1,7 @@
 CHART_FILES = "layout/charts"
 IMAGE_FILES = "layout/images"
 
+CHARTBOOK_1 = "layout/chartbook_1.xlsx"
 
 # Chart Sizes
 CHARTS <- list(

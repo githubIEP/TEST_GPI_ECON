@@ -230,7 +230,7 @@ cost$indicator2[cost$indicator=="wounded"]="Terrorism"
 
 
 econcost <- cost %>% 
-  subset(select=c(1:5,13:21)) %>% 
+  subset(select=c(1:5,7:10,12:21)) %>% 
   gather(subtype, value, -c(iso3c,year,indicator, type, domain,indicator2)) %>% 
   mutate(country=countrycode(iso3c,"iso3c","country.name")) 
 econcost$country[econcost$iso3c=="KSV"] <- "Kosovo"
@@ -251,15 +251,15 @@ econcost <- econcost %>% distinct()
 
 # tmp <- econcost %>% subset(subtype=="impact") %>% group_by(year, domain) %>% summarise(total=sum(value)) %>% ungroup() %>% spread(domain, total)
 tmp <- econcost %>% subset(subtype=="impact") %>% group_by(year) %>% summarise(total=sum(value)) %>% ungroup()
-# 
-# p = tmp %>% ggplot(aes(x = year, y = total/10^12)) +
-#   geom_line (size = 0.75, color = 'red') + 
-#   # scale_y_continuous (breaks = c(15000000000000, 16000000000000, 17000000000000, 
-#   #                                18000000000000, 19000000000000, 20000000000000),
-#   #                     labels = c("15", "16", "17", "18", "19", "20")) +
-#   scale_x_continuous (breaks = c(2008:2022)) + 
-#   labs(y = "Total Cost (Constant 2022 US$ PPP, trillions)")
-# print(p)
+
+p = tmp %>% ggplot(aes(x = year, y = total/10^12)) +
+  geom_line (size = 0.75, color = 'red') + 
+  # scale_y_continuous (breaks = c(15000000000000, 16000000000000, 17000000000000, 
+  #                                18000000000000, 19000000000000, 20000000000000),
+  #                     labels = c("15", "16", "17", "18", "19", "20")) +
+  scale_x_continuous (breaks = c(2008:2022)) + 
+  labs(y = "Total Cost (Constant 2022 US$ PPP, trillions)")
+print(p)
 
 
 

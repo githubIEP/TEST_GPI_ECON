@@ -6,9 +6,9 @@ pacman::p_load(dplyr, tidyr, stringr, WDI, readr, openxlsx, readxl,
 options (scipen = 999)
 #devtools::install_github("david-hammond/tidyindexR") #only need to be run once
 
-#_________________________________________________________ADMIN SO CODES WORK_________________________________________________________________________________________________
-
-
+# #_________________________________________________________ADMIN SO CODES WORK_________________________________________________________________________________________________
+# install.packages("dplyr")
+# library(dplyr)
 # GPI data ----------------------------------------------------------------
 
 #gpidata <- read_excel("Data/2021 GPI data.xlsx") %>% 

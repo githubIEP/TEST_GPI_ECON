@@ -2,7 +2,7 @@
 #################################### Violent assault ###################################
 
 #violent.assault <- read.csv("Data/assault_data.csv") %>% rename(country=Country, year=Year, value=Rate) %>% 
-violent.assault <- rio::import("02_data/processed/assault_data.xlsx") %>% rename(country=Country, year=Year, value=Rate) %>%
+violent.assault <- read.csv("02_data/processed/assault_data.csv") %>% rename(country=Country, year=Year, value=Rate) %>%
   select(country, year, value) %>% 
   mutate(value = as.numeric(as.character(gsub(",","",value)))) %>% subset(year>2006)  %>%
   subset(!country=="United Kingdom (Northern Ireland)") %>% 
@@ -138,7 +138,7 @@ rm(violent.assault.peace.level)
 
 
 #sexual.assault <- read_csv("Data/sexual_violence.csv") %>% 
-sexual.assault <- rio::import("02_data/processed/sexual_violence.xlsx") %>% 
+sexual.assault <- read_csv("02_data/processed/sexual_violence.csv") %>% 
   rename(country=Country, year=Year, value="Measure Values", rate="Measure Names") %>% 
   select(country, year, value, rate) %>% 
   mutate(value = as.numeric(as.character(gsub(",","",value)))) %>% 
