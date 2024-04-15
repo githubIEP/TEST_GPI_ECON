@@ -1,22 +1,42 @@
+##### ----- GPI ECON COSTING STANDARD CHARTS AND TABLES
+#' This script is for producing all the standard GPI Econ Costing Charts
+##### -----
+
+
+### --- Libraries, Variables, Functions
 library(knitr)
 library(openxlsx)
+library(reshape2)
 
-# 1. Trend Chart ====================================================================================================================
+## -- Spreadsheet to save charts in
+wb_SECTION3 <- createWorkbook()
 
+### --- List of Standard Charts and Tables
+
+# Trend in Economic Impact of Violence
+CHART_EconImpact = c(title = "Trend in Economic Impact of Violence",
+                     sheet = "EconImpact", source = "IEP Calculations", xtext = "year", ytext = "Economic Impact of Violence (Constant 2022 USD)",
+                     type = "Chart", position = "Normal")
+
+# Share in the Economic Impact of Violence
+CHART_pie = c(title = "Share in the Economic Impact of Violence",
+              sheet = "CompositionPie", source = "IEP Calculations", xtext = "", ytext = "",
+              type = "Chart", position = "Large")
+
+
+
+
+### --- Loading Data
 
 econ_impact.df <- rio::import("04_outputs/Economic Impact of Violence.xlsx")
 
-CHART_EconImpact = c(title = "Trend in Economic Impact of Violence",
-                       sheet = "EconImpact", source = "IEP Calculations", xtext = "year", ytext = "Economic Impact of Violence (Constant 2022 USD)",
-                       type = "Chart", position = "Normal")
 
-
+# 1. Trend Chart ====================================================================================================================
 CHART_EconImpact.df <- econ_impact.df %>%
   dplyr::filter(subtype == "impact") %>%
   group_by(year) %>%
   summarise(value = sum(value)) %>%
   ungroup()
-
 
 
 p <- ggplot(data = CHART_EconImpact.df, aes(x = year, y = value/10^12)) +
@@ -33,11 +53,6 @@ pCHART_EconImpact <- f_ThemeTraining(plot = p,
                                        xgridline = "", 
                                        ygridline = "Include")
 
-
-pCHART_EconImpact
-
-
-
 # 2. Composition Pie ======================================================================================================
 
 
@@ -46,9 +61,6 @@ CHART_pie.df <- econ_impact.df %>%
   group_by(indicator2) %>%
   summarise(value = sum(value)) %>%
   ungroup()
-
-
-
 
 row <- CHART_pie.df %>%
   dplyr::filter(indicator2 %in% c("Terrorism",
@@ -96,12 +108,6 @@ CHART_pie.df$labelPosition[2] <- 0.03
 CHART_pie.df$Prop <- CHART_pie.df$Prop*100
 
 CHART_pie.df$label <- paste0(CHART_pie.df$indicator2, "\n", CHART_pie.df$Prop, "%")
-
-CHART_pie = c(title = "Share in the Economic Impact of Violence",
-                       sheet = "CompositionPie", source = "IEP Calculations", xtext = "", ytext = "",
-                       type = "Chart", position = "Large")
-
-
 
 
 p1 <- ggplot(CHART_pie.df, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = indicator2)) +
@@ -197,7 +203,7 @@ new_table$impact <- format(new_table$impact, big.mark = ",")
 
 
 # 4. domain trends ======================================================================================================
-library(reshape2)
+
 domain <- econ_impact.df %>%
   dplyr::filter(subtype == "impact") %>%
   dplyr::select(c(`year`, `indicator2`, `value`))
@@ -953,8 +959,6 @@ pCHART_composition
 
 
 # Creating workbook ================================================================================================
-
-wb_SECTION3 <- createWorkbook()
 
 
 SECTION3_EXPORT = c("CHART_EconImpact", "CHART_pie", "CHART_domain", "CHART_pie_arm", "CHART_pie_int", "CHART_pie_vio", "CHART_per_cap_mil", "CHART_Total_per_cap", "CHART_percentage_change", "CHART_composition")
