@@ -79,7 +79,7 @@ pos.exp <- pos.exp %>% select(iso3c, variablename, year, value) %>%
   rename(geocode=iso3c) %>% mutate(year=as.numeric(year))%>%
   mutate(value=as.numeric(value)) %>% mutate(variablename="public order and safety")
 
-pos.exp <- index_data_pad(pos.exp)
+pos.exp <- f_index_data_pad(pos.exp)
 
 pos.exp <- pos.exp %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>%
   rename(iso3c=geocode, value=imputed)
@@ -174,7 +174,7 @@ count <- pos.exp3 %>% group_by(iso3c) %>% tally()
 
 pos.exp <- pos.exp %>% rename (geocode = iso3c, value = intsecu) %>% mutate (variablename = "internal security")
 
-pos.exp <- index_data_pad(pos.exp)
+pos.exp <- f_index_data_pad(pos.exp)
 
 
 pos.exp <- pos.exp %>% select (c(1, 2, 5)) %>% rename (iso3c = geocode, intsecu = imputed)

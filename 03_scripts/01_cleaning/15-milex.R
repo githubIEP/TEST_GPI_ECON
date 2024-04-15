@@ -16,7 +16,7 @@ gpidata <- gpidata %>% mutate (indicator = case_when (indicator == "Terrorism de
 milex <- gpidata %>% 
   subset(indicator=="military expenditure (% gdp)") %>% 
   mutate(value = value /100) %>%
-  filter (year < 2022)
+  dplyr::filter (year < 2022)
 
 
 # Data for 2022 from SIPRI
@@ -29,11 +29,11 @@ milex2022 <- read_excel("02_data/processed/SIPRI-Milex-data-1949-2022.xlsx", she
   mutate(country=ifelse(country=="Norh Macedonia","Macedonia",country)) %>%
   mutate( iso3c=  countrycode(country, "country.name","iso3c")) %>%
   mutate(iso3c=ifelse(country=="Kosovo","KSV",iso3c)) %>%
-  filter (!country == "USSR")%>%
+  dplyr::filter (!country == "USSR")%>%
   select (iso3c, year, value) %>%
-  filter (year > 2021) %>%
+  dplyr::filter (year > 2021) %>%
   right_join(gpi.grid) %>%
-  filter(year > 2021) %>%
+  dplyr::filter(year > 2021) %>%
   mutate (value = as.numeric(value)) %>%
   mutate (indicator = "military expenditure (% gdp)")
 
@@ -48,7 +48,7 @@ milex <- gpi.grid %>% left_join(milex)
 
 milex <- milex %>% rename (geocode = iso3c, variablename = indicator)
 
-milex <- index_data_pad(milex)
+milex <- f_index_data_pad(milex)
 
 milex <- milex %>% select (c(1, 2, 5)) %>% rename (iso3c = geocode, milex = imputed)
 

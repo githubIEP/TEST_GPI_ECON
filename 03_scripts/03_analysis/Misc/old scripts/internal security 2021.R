@@ -80,7 +80,7 @@ pos.exp <- pos.exp %>% select(iso3c, variablename, year, value) %>%
   rename(geocode=iso3c) %>% mutate(year=as.numeric(year))%>%
   mutate(value=as.numeric(value)) %>% mutate(variablename="public order and safety")
 
-pos.exp <- index_data_pad(pos.exp)
+pos.exp <- f_index_data_pad(pos.exp)
 
 pos.exp <- pos.exp %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>%
   rename(iso3c=geocode, value=imputed)

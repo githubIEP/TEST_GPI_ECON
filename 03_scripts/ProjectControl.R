@@ -1,4 +1,13 @@
 
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(dplyr, tidyr, stringr, WDI, readr, openxlsx, readxl, 
+               DataCombine, countrycode, ggplot2)
+
+devtools::install_github("david-hammond/tidyindexR")
+
+options (scipen = 999)
+
+
 source("03_scripts/ProjectFunction.R")
 source("03_scripts/ProjectVariables.R")
 source("03_scripts/ProjectExport.R")

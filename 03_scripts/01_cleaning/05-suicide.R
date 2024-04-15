@@ -4,8 +4,8 @@
 ########### WORLD BANK SUICIDE RATE ################
 
 
-#suicide <- get.wdi("all","SH.STA.SUIC.P5",2007,2021) %>% 
-suicide <- get.wdi("all","SH.STA.SUIC.P5",2006,2022) %>% 
+#suicide <- f_get.wdi("all","SH.STA.SUIC.P5",2007,2021) %>% 
+suicide <- f_get.wdi("all","SH.STA.SUIC.P5",2006,2022) %>% 
   mutate (year = year + 1) %>%
   rename(rate=SH.STA.SUIC.P5) %>% rename(value=rate) %>% mutate(variablename="suicide_rate") %>%
   subset(!iso3c=="PSE") %>% subset(!iso3c=="KSV") %>% subset(!iso3c=="TWN")
@@ -23,7 +23,7 @@ suicide <- suicide %>% rename(geocode=iso3c) %>% mutate(variablename = "suicide 
   subset(!geocode %in% c("KSV", "PSE", "TWN"))
 
 
-suicide <- index_data_pad(suicide)
+suicide <- f_index_data_pad(suicide)
 
 suicide <- suicide %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>%
   rename(iso3c=geocode, value=imputed)

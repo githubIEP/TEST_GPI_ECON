@@ -78,7 +78,7 @@ unhcr <- gpi.grid %>% left_join(unhcr)
 
 unhcr <- unhcr %>% rename (geocode = iso3c, value = unhcr) %>% mutate (variablename = "unhcr")
 
-unhcr <-  index_data_pad(unhcr)
+unhcr <-  f_index_data_pad(unhcr)
   
 unhcr <- unhcr %>% select (c(1, 2, 5)) %>% rename (iso3c = geocode, unhcr = imputed)
 

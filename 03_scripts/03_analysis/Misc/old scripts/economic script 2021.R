@@ -65,10 +65,10 @@ gdp__weo <- subset(gdp__weo,!(iso3c=="PSE" & year<2014))
 gdp__weo <- subset(gdp__weo,!(iso3c=="SSD" & year<2009))
 
 gdp__weo <- left_join(gpi.grid, gdp__weo)
-tmp <- missing(gdp__weo)
+tmp <- f_missing(gdp__weo)
 
 
-gdp.wdi <- get.wdi("all","NY.GDP.MKTP.CD",2006,2019)%>% 
+gdp.wdi <- f_get.wdi("all","NY.GDP.MKTP.CD",2006,2019)%>% 
   rename(value=NY.GDP.MKTP.CD) %>% mutate(year = year + 1) %>% 
   mutate(year=as.numeric(as.character(year))) %>% 
   mutate(value=as.numeric(as.character(value)))
@@ -78,7 +78,7 @@ tmp2 <- tmp %>%  na.omit()
 gdp__weo <- gdp__weo %>%  na.omit() %>%  rbind(tmp2)
 rm(tmp2)
 gdp__weo <- left_join(gpi.grid, gdp__weo)
-tmp <- missing(gdp__weo)
+tmp <- f_missing(gdp__weo)
 # USE this to write the missing data
 # write.csv(tmp, "missing gdp current US v2.csv")
 gdp.wdi.missing <- read_csv("Data/Missing data/missing GDP (current US$) 2021.csv") %>% select(iso3c, year, value)
@@ -87,11 +87,11 @@ gdp.wdi <-  rbind(gdp__weo, gdp.wdi.missing)
 gdp.wdi <- left_join(gpi.grid, gdp.wdi)
 gdp.wdi <- gdp.wdi %>%  rename(geocode=iso3c) %>% mutate(variablename="GDP US")
 gdp.wdi <- gdp.wdi %>% distinct()
-gdp.wdi <- index_data_pad(gdp.wdi)
+gdp.wdi <- f_index_data_pad(gdp.wdi)
 gdp.wdi <- gdp.wdi %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>% rename(iso3c=geocode, value=imputed)
 #If tmp is zero we on money
 tmp <- gpi.grid %>% left_join(gdp.wdi)
-tmp <- missing(tmp)
+tmp <- f_missing(tmp)
 gdp.wdi[,"variablename"] <- "gdp current US"
 
 rm(tmp)
@@ -119,10 +119,10 @@ PPP_conv_weo <- subset(PPP_conv_weo,!(iso3c=="SSD" & year<2009))
 PPP_conv_weo <- left_join(gpi.grid, PPP_conv_weo)
 
 
-tmp <- missing(PPP_conv_weo)
+tmp <- f_missing(PPP_conv_weo)
 
 
-PPP_conv_weo.wdi <- get.wdi("all","PA.NUS.PPPC.RF",2006,2019)%>% 
+PPP_conv_weo.wdi <- f_get.wdi("all","PA.NUS.PPPC.RF",2006,2019)%>% 
   rename(value=PA.NUS.PPPC.RF) %>% mutate(year = year + 1) %>% 
   mutate(year=as.numeric(as.character(year))) %>% 
   mutate(value=as.numeric(as.character(value)))
@@ -134,7 +134,7 @@ tmp2 <- tmp %>%  na.omit()
 PPP_conv_weo <- PPP_conv_weo %>%  na.omit() %>%  rbind(tmp2)
 rm(tmp2)
 PPP_conv_weo <- left_join(gpi.grid, PPP_conv_weo)
-tmp <- missing(PPP_conv_weo)
+tmp <- f_missing(PPP_conv_weo)
 
 # We are missing some
 tmp$value[tmp$iso3c=="CUB"| tmp$iso3c=="PRK" ] = 1 
@@ -150,13 +150,13 @@ PPP_conv_weo <- left_join(gpi.grid, PPP_conv_weo)
 
 PPP_conv_weo <- PPP_conv_weo %>%  rename(geocode=iso3c) %>% mutate(variablename="GDP US")
 PPP_conv_weo <- PPP_conv_weo %>% distinct()
-PPP_conv_weo <- index_data_pad(PPP_conv_weo)
+PPP_conv_weo <- f_index_data_pad(PPP_conv_weo)
 
 
 ppp.conv <- PPP_conv_weo %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>% rename(iso3c=geocode, value=imputed)
 #If tmp is zero we on money
 tmp <- gpi.grid %>% left_join(ppp.conv)
-tmp <- missing(tmp)
+tmp <- f_missing(tmp)
 
 
 ############################################# Inflation and deflator ############################################# 
@@ -258,10 +258,10 @@ pop <- subset(pop,!(iso3c=="SSD" & year<2009))
 
 pop <- left_join(gpi.grid, pop)
 
-tmp <- missing(pop)
+tmp <- f_missing(pop)
 
 
-pop_wb <- get.wdi("all","SP.POP.TOTL",2006,2019)%>% 
+pop_wb <- f_get.wdi("all","SP.POP.TOTL",2006,2019)%>% 
   rename(value=SP.POP.TOTL) %>% mutate(year = year + 1) %>% 
   mutate(year=as.numeric(as.character(year))) %>% 
   mutate(value=as.numeric(as.character(value)))

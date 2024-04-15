@@ -4,7 +4,7 @@
 
 ## WDI PPP PC Constant Estimates ================================================================
 
-wdi.gdpc.ppp <- get.wdi("all","NY.GDP.PCAP.PP.KD",2007,2022) %>% 
+wdi.gdpc.ppp <- f_get.wdi("all","NY.GDP.PCAP.PP.KD",2007,2022) %>% 
   rename(value=NY.GDP.PCAP.PP.KD) %>% mutate(year=year+1) 
 
 
@@ -23,7 +23,7 @@ gdp.impute <-  wdi.gdpc.ppp %>% filter(complete.cases(value))
 
 
 gdp.impute <- gdp.impute %>%
-  index_data_pad() %>%
+  f_index_data_pad() %>%
   rename(iso3c = geocode) %>%
   right_join(gpi.grid) %>%
   rename(geocode = iso3c) %>%
@@ -73,7 +73,7 @@ rm(wdi.gdpc.ppp, ppp_us)
 
 # PPP Conversion Factor ====================================================
 
-ppp.conv <- get.wdi("all","PA.NUS.PPPC.RF",2006,2022) %>%   
+ppp.conv <- f_get.wdi("all","PA.NUS.PPPC.RF",2006,2022) %>%   
   rename(value=PA.NUS.PPPC.RF) %>% mutate(year=year+1)
 
 ppp.conv <- gpi.grid %>% left_join(ppp.conv, by=c("year","iso3c"))
@@ -89,7 +89,7 @@ ppp.conv.impute <-  ppp.conv %>% filter(complete.cases(value))
 
 
 ppp.conv.impute <- ppp.conv.impute %>%
-  index_data_pad() %>%
+  f_index_data_pad() %>%
   rename(iso3c = geocode) %>%
   right_join(gpi.grid) %>%
   rename(geocode = iso3c) %>%
@@ -124,7 +124,7 @@ rm(ppp.conv.impute)
 
 # USD Deflator =================================================================
 
-deflator <- get.wdi("all","NY.GDP.DEFL.ZS",2006,2022) %>%   
+deflator <- f_get.wdi("all","NY.GDP.DEFL.ZS",2006,2022) %>%   
   rename(value= NY.GDP.DEFL.ZS) %>% mutate(year=year+1)
 
 
@@ -139,7 +139,7 @@ deflator.impute <-  deflator %>% filter(complete.cases(value))
 
 
 deflator.impute <- deflator.impute %>%
-  index_data_pad() %>%
+  f_index_data_pad() %>%
   rename(iso3c = geocode) %>%
   right_join(gpi.grid) %>%
   rename(geocode = iso3c) %>%
@@ -187,7 +187,7 @@ rm(deflator.impute, deflator_2022)
 
 # GDP Current ==================================================================
 
-gdp.current <- get.wdi("all","NY.GDP.MKTP.CD",2007,2022) %>% 
+gdp.current <- f_get.wdi("all","NY.GDP.MKTP.CD",2007,2022) %>% 
   rename(value=NY.GDP.MKTP.CD) %>% mutate(year=year+1) 
 
 
@@ -206,7 +206,7 @@ current.impute <-  gdp.current %>% filter(complete.cases(value))
 
 
 current.impute <- current.impute %>%
-  index_data_pad() %>%
+  f_index_data_pad() %>%
   rename(iso3c = geocode) %>%
   right_join(gpi.grid) %>%
   rename(geocode = iso3c) %>%
@@ -242,7 +242,7 @@ rm(current.impute)
 
 # GDP Constant ==================================================================
 
-gdp.constant <- get.wdi("all","NY.GDP.MKTP.KD",2007,2022) %>% 
+gdp.constant <- f_get.wdi("all","NY.GDP.MKTP.KD",2007,2022) %>% 
   rename(value=NY.GDP.MKTP.KD) %>% mutate(year=year+1) 
 
 
@@ -261,7 +261,7 @@ constant.impute <-  gdp.constant %>% filter(complete.cases(value))
 
 
 constant.impute <- constant.impute %>%
-  index_data_pad() %>%
+  f_index_data_pad() %>%
   rename(iso3c = geocode) %>%
   right_join(gpi.grid) %>%
   rename(geocode = iso3c) %>%
@@ -298,7 +298,7 @@ rm(constant.impute)
 ## ==============================================================================
 
 # GDP Constant PPP =============================================================
-gdp.constant.ppp <- get.wdi("all","NY.GDP.MKTP.PP.KD",2007,2022) %>% 
+gdp.constant.ppp <- f_get.wdi("all","NY.GDP.MKTP.PP.KD",2007,2022) %>% 
   rename(value=NY.GDP.MKTP.PP.KD) %>% mutate(year=year+1) 
 
 
@@ -317,7 +317,7 @@ constant.ppp.impute <-  gdp.constant.ppp %>% filter(complete.cases(value))
 
 
 constant.ppp.impute <- constant.ppp.impute %>%
-  index_data_pad() %>%
+  f_index_data_pad() %>%
   rename(iso3c = geocode) %>%
   right_join(gpi.grid) %>%
   rename(geocode = iso3c) %>%
@@ -361,7 +361,7 @@ rm(gdp.current, gdp.constant, gdp.constant.ppp)
 
 
 # GDP per cap Constant  =============================================================
-gdp.pc.constant <- get.wdi("all","NY.GDP.PCAP.KD",2007,2022) %>% 
+gdp.pc.constant <- f_get.wdi("all","NY.GDP.PCAP.KD",2007,2022) %>% 
   rename(value=NY.GDP.PCAP.KD) %>% mutate(year=year+1) 
 
 
@@ -379,7 +379,7 @@ pc.constant.impute <-  gdp.pc.constant %>% filter(complete.cases(value))
 
 
 pc.constant.impute <- pc.constant.impute %>%
-  index_data_pad() %>%
+  f_index_data_pad() %>%
   rename(iso3c = geocode) %>%
   right_join(gpi.grid) %>%
   rename(geocode = iso3c) %>%

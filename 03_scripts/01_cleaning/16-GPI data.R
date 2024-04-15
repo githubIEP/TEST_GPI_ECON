@@ -74,7 +74,7 @@ homicide <- gpi.grid %>% left_join(homicide)
 homicide <- homicide %>% rename (geocode = iso3c, variablename = indicator) %>% 
   mutate (variablename = "homicide rate") 
 
-homicide <- index_data_pad(homicide)
+homicide <- f_index_data_pad(homicide)
 
 homicide <- homicide %>% select (1, 2, 3, 5) %>% rename (iso3c = geocode, value = imputed, indicator = variablename)
 
@@ -97,7 +97,7 @@ incar <- incar %>% rename (geocode = iso3c, variablename = indicator) %>%
   mutate (variablename = "incarceration rate") 
 
 
-incar <- index_data_pad(incar)
+incar <- f_index_data_pad(incar)
 
 incar <- incar %>% select (1, 2, 3, 5) %>% rename (iso3c = geocode, value = imputed, indicator = variablename)
 
@@ -114,7 +114,7 @@ conflict <- gpi.grid %>% left_join(conflict)
 
 conflict <- conflict  %>% rename (geocode = iso3c, variablename = indicator) 
 
-conflict <- index_data_pad(conflict)
+conflict <- f_index_data_pad(conflict)
 
 conflict <- conflict %>% select (c(1,2, 5)) %>% rename (iso3c = geocode, battle_deaths = imputed)
 
@@ -148,7 +148,7 @@ refugidp <- refugidp %>% rename (geocode = iso3c, value = refugeidp) %>%
   mutate (variablename = "refugee")  
 
 
-refugidp <- index_data_pad(refugidp)
+refugidp <- f_index_data_pad(refugidp)
 
 refugidp <- refugidp %>% select (1, 2, 5) %>% rename (iso3c = geocode, refugeidp = imputed)
 
@@ -177,7 +177,7 @@ gdplosses <- subset(gdplosses,!(year>2022))
 
 gdplosses <- gdplosses %>% rename (geocode = iso3c, value = gdplosses) %>% mutate (variablename = "gdp losses")
 
-gdplosses <- index_data_pad(gdplosses)
+gdplosses <- f_index_data_pad(gdplosses)
 
 
 gdplosses <- gdplosses %>% select (c(1, 2, 5)) %>% rename (iso3c = geocode, gdplosses = imputed)

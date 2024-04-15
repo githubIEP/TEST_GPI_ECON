@@ -22,7 +22,7 @@ police <- gpi.grid %>% left_join(police)
 
 police <- police %>% rename (geocode =iso3c) %>% mutate (variablename = "police rate")
 
-police <- index_data_pad(police)
+police <- f_index_data_pad(police)
 
 police <- police %>% select (geocode, year, imputed) %>% rename (iso3c = geocode, value = imputed) 
 

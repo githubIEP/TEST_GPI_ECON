@@ -24,7 +24,7 @@ violent.assault <- violent.assault[violent.assault$iso3c %in% pos,]
 
 #work out who is missing data
 violent.assault <- gpi.grid %>% left_join(violent.assault)
-tmp <- missing(violent.assault)
+tmp <- f_missing(violent.assault)
 
 count_of_missing <- as.data.frame(table(tmp$iso3c))
 count_of_missing <- count_of_missing %>%  mutate(Freq=as.numeric(Freq))
@@ -60,7 +60,7 @@ violent.assault <- violent.assault %>% select(iso3c, variablename, year, value) 
   rename(geocode=iso3c) %>% mutate(year=as.numeric(year))%>%
   mutate(value=as.numeric(value)) %>% mutate(variablename="violent assault")
 
-violent.assault <- index_data_pad(violent.assault)
+violent.assault <- f_index_data_pad(violent.assault)
 
 violent.assault <- violent.assault %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>%
   rename(iso3c=geocode, value=imputed)
@@ -90,7 +90,7 @@ violent.assault <- gpi.grid %>% left_join(violent.assault)
 
 ##### From who is missing allocate the average rate by peace level and region
 
-tmp <- missing(violent.assault)
+tmp <- f_missing(violent.assault)
 tmp <- tmp %>%  left_join(Peace_and_region)
 tmp <- tmp %>% select(-variablename,-value)
 
@@ -105,7 +105,7 @@ violent.assault <- violent.assault %>% na.omit() %>% rbind(tmp)
 ##### MISSING COUNTRIES Because a certainr region in a year does not have that peace level.
 violent.assault <- gpi.grid %>% left_join(violent.assault)
 
-tmp <- missing(violent.assault)
+tmp <- f_missing(violent.assault)
 
 
 #If data still does not have a match so I will take the average of the peace level #
@@ -157,7 +157,7 @@ sexual.assault <- sexual.assault[sexual.assault$iso3c %in% pos,]
 
 #work out who is missing data
 sexual.assault <- gpi.grid %>% left_join(sexual.assault)
-tmp <- missing(sexual.assault)
+tmp <- f_missing(sexual.assault)
 
 count_of_missing <- as.data.frame(table(tmp$iso3c))
 count_of_missing <- count_of_missing %>%  mutate(Freq=as.numeric(Freq))
@@ -193,7 +193,7 @@ sexual.assault <- sexual.assault %>% select(iso3c, variablename, year, value) %>
   rename(geocode=iso3c) %>% mutate(year=as.numeric(year))%>%
   mutate(value=as.numeric(value)) %>% mutate(variablename="sexual assault")
 
-sexual.assault <- index_data_pad(sexual.assault)
+sexual.assault <- f_index_data_pad(sexual.assault)
 
 sexual.assault <- sexual.assault %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>%
   rename(iso3c=geocode, value=imputed)
@@ -223,7 +223,7 @@ sexual.assault <- gpi.grid %>% left_join(sexual.assault)
 
 ##### From who is missing allocate the average rate by peace level and region
 
-tmp <- missing(sexual.assault)
+tmp <- f_missing(sexual.assault)
 tmp <- tmp %>%  left_join(Peace_and_region)
 tmp <- tmp %>% select(-variablename,-value)
 
@@ -238,7 +238,7 @@ sexual.assault <- sexual.assault %>% na.omit() %>% rbind(tmp)
 ##### MISSING COUNTRIES Because a certainr region in a year does not have that peace level.
 sexual.assault <- gpi.grid %>% left_join(sexual.assault)
 
-tmp <- missing(sexual.assault)
+tmp <- f_missing(sexual.assault)
 
 
 #If data still does not have a match so I will take the average of the peace level #

@@ -43,7 +43,7 @@ tmp <- mutate(tmp, year=year+3)
 
 #work out who is missing data
 small_arms <- gpi.grid %>% left_join(tmp)
-tmp <- missing(small_arms)
+tmp <- f_missing(small_arms)
 
 count_of_missing <- as.data.frame(table(tmp$iso3c))
 count_of_missing <- count_of_missing %>%  mutate(Freq=as.numeric(Freq))
@@ -81,7 +81,7 @@ small_arms <- small_arms %>% select(iso3c, variablename, year, value) %>%
   rename(geocode=iso3c) %>% mutate(year=as.numeric(year))%>%
   mutate(value=as.numeric(value)) %>% mutate(variablename="small arms")
 
-small_arms <- index_data_pad(small_arms)
+small_arms <- f_index_data_pad(small_arms)
 small_arms <- small_arms %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>%
   rename(iso3c=geocode, value=imputed) 
 
@@ -119,7 +119,7 @@ setwd('C:/Users/hbardwell/Documents/Github/GPI_2021_ECONOMIC_IMPACT')
 # 
 # #work out who is missing data
 # small.arms <- gpi.grid %>% left_join(small.arms)
-# tmp <- missing(small.arms)
+# tmp <- f_missing(small.arms)
 # 
 # count_of_missing <- as.data.frame(table(tmp$iso3c))
 # count_of_missing <- count_of_missing %>%  mutate(Freq=as.numeric(Freq))
@@ -155,7 +155,7 @@ setwd('C:/Users/hbardwell/Documents/Github/GPI_2021_ECONOMIC_IMPACT')
 #   rename(geocode=iso3c) %>% mutate(year=as.numeric(year))%>%
 #   mutate(value=as.numeric(value)) %>% mutate(variablename="small arms")
 # 
-# small.arms <- index_data_pad(small.arms)
+# small.arms <- f_index_data_pad(small.arms)
 # 
 # # Small.arms.data <- small.arms%>%  mutate(value=imputed*10^6)
 # 

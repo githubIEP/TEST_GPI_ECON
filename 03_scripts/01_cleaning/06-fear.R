@@ -14,7 +14,7 @@ fear <- gpidata %>%
 
 fear <- gpi.grid %>% left_join(fear) %>% rename (geocode = iso3c)
 
-fear <- index_data_pad(fear)
+fear <- f_index_data_pad(fear)
 
 
 fear <- fear %>% select (geocode, year, imputed ) %>% 

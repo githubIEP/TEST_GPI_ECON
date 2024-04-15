@@ -76,10 +76,10 @@ gdp__weo <- subset(gdp__weo,!(iso3c=="PSE" & year<2014))
 gdp__weo <- subset(gdp__weo,!(iso3c=="SSD" & year<2009))
 
 gdp__weo <- left_join(gpi.grid, gdp__weo)
-tmp <- missing(gdp__weo)
+tmp <- f_missing(gdp__weo)
 
 
-gdp.wdi <- get.wdi("all","NY.GDP.MKTP.CD",2006,2019)%>% 
+gdp.wdi <- f_get.wdi("all","NY.GDP.MKTP.CD",2006,2019)%>% 
   rename(value=NY.GDP.MKTP.CD) %>% mutate(year = year + 1) %>% 
   mutate(year=as.numeric(as.character(year))) %>% 
   mutate(value=as.numeric(as.character(value)))
@@ -89,7 +89,7 @@ tmp2 <- tmp %>%  na.omit()
 gdp__weo <- gdp__weo %>%  na.omit() %>%  rbind(tmp2)
 rm(tmp2)
 gdp__weo <- left_join(gpi.grid, gdp__weo)
-tmp <- missing(gdp__weo)
+tmp <- f_missing(gdp__weo)
 # USE this to write the missing data
 # write.csv(tmp, "missing gdp current US v2.csv")
 gdp.wdi.missing <- read_csv("Data/Missing data/missing GDP (current US$) 2021.csv") %>% select(iso3c, year, value)
@@ -98,11 +98,11 @@ gdp.wdi <-  rbind(gdp__weo, gdp.wdi.missing)
 gdp.wdi <- left_join(gpi.grid, gdp.wdi)
 gdp.wdi <- gdp.wdi %>%  rename(geocode=iso3c) %>% mutate(variablename="GDP US")
 gdp.wdi <- gdp.wdi %>% distinct()
-gdp.wdi <- index_data_pad(gdp.wdi)
+gdp.wdi <- f_index_data_pad(gdp.wdi)
 gdp.wdi <- gdp.wdi %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>% rename(iso3c=geocode, value=imputed)
 #If tmp is zero we on money
 tmp <- gpi.grid %>% left_join(gdp.wdi)
-tmp <- missing(tmp)
+tmp <- f_missing(tmp)
 gdp.wdi[,"variablename"] <- "gdp current US"
 
 rm(tmp)
@@ -111,14 +111,14 @@ rm(tmp)
 ############################################# PPP Conversion Scale  ############################################# 
 
 
-ppp.conv <- get.wdi("all","PA.NUS.PPPC.RF",2006,2020) %>% 
+ppp.conv <- f_get.wdi("all","PA.NUS.PPPC.RF",2006,2020) %>% 
   rename(value=PA.NUS.PPPC.RF) %>% mutate(year=year+1)
 
 ppp.conv <- left_join(gpi.grid, ppp.conv, by=c("year","iso3c"))
 ppp.conv <- ppp.conv[ppp.conv$iso3c %in% pos,]
 
 
-tmp <-missing(ppp.conv)
+tmp <-f_missing(ppp.conv)
 
 
 
@@ -130,7 +130,7 @@ ppp.conv$variablename <- "ppp convt"
 
 ppp.conv <- ppp.conv %>%  rename(geocode=iso3c) %>% mutate(variablename="GDP US")
 ppp.conv <- ppp.conv %>% distinct()
-ppp.conv <- index_data_pad(ppp.conv)
+ppp.conv <- f_index_data_pad(ppp.conv)
 
 ppp.conv <- ppp.conv %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>% rename(iso3c=geocode, value=imputed)
 
@@ -241,10 +241,10 @@ pop <- subset(pop,!(iso3c=="SSD" & year<2009))
 
 pop <- left_join(gpi.grid, pop)
 
-tmp <- missing(pop)
+tmp <- f_missing(pop)
 
 
-pop_wb <- get.wdi("all","SP.POP.TOTL",2006,2019)%>% 
+pop_wb <- f_get.wdi("all","SP.POP.TOTL",2006,2019)%>% 
   rename(value=SP.POP.TOTL) %>% mutate(year = year + 1) %>% 
   mutate(year=as.numeric(as.character(year))) %>% 
   mutate(value=as.numeric(as.character(value)))
@@ -264,7 +264,7 @@ pop <- pop %>%  rename(population=value)
 
 # write.csv(pop, "Results/Economic output/population.csv")
 
-tmp <- missing(pop)
+tmp <- f_missing(pop)
 
 ###########################                PPP SCALE                              ##################
 

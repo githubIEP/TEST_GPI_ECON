@@ -69,7 +69,7 @@ vet <- gpi.grid %>% left_join(vet, by = c("year", "iso3c"))
 
 vet <- vet %>% rename (geocode = iso3c, value = vet.int) %>% mutate (variablename = "Veteran Costs")
 
-vet <- index_data_pad(vet)
+vet <- f_index_data_pad(vet)
 
 vet <- vet %>% select (c(1, 2, 5)) %>% rename (iso3c = geocode, vet.int = imputed)
 

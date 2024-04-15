@@ -199,7 +199,7 @@ new_table$impact <- format(new_table$impact, big.mark = ",")
 # 4. domain trends ======================================================================================================
 library(reshape2)
 domain <- econ_impact.df %>%
-  filter(subtype == "impact") %>%
+  dplyr::filter(subtype == "impact") %>%
   dplyr::select(c(`year`, `indicator2`, `value`))
 
 tmp <- domain %>%
