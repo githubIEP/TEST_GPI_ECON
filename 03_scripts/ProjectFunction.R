@@ -332,3 +332,53 @@ f_missing <- function(df){
   left_join(gpi.grid,df)
   df <- df[rowSums(is.na(df)) > 0,]
   return(df)}
+
+
+## -- f_PeaceLabels ----------------------------------------------------------
+f_PeaceLabels <- function(pScatter, xaxis = "Include", yaxis = "Include", 
+                          left_text = "", right_text = "", up_text = "", down_text = "", xposition = 0.07, yposition = 0.045) {
+  
+  ARROW_LENGTH = 0.05
+  LEFT_ARROW_START = 0.12
+  LEFT_ARROW_END = LEFT_ARROW_START + ARROW_LENGTH
+  RIGHT_ARROW_END = 0.97
+  RIGHT_ARROW_START = RIGHT_ARROW_END - ARROW_LENGTH
+  UP_ARROW_END = 0.96
+  UP_ARROW_START = UP_ARROW_END - ARROW_LENGTH
+  DOWN_ARROW_START = 0.12
+  DOWN_ARROW_END = DOWN_ARROW_START + ARROW_LENGTH
+  LEFT_TEXT = LEFT_ARROW_END + 0.01
+  RIGHT_TEXT = RIGHT_ARROW_START - 0.01
+  UP_TEXT = UP_ARROW_START - 0.01
+  DOWN_TEXT = DOWN_ARROW_END + 0.01
+  
+  
+  # Using ggdraw to add annotations conditionally
+  p <- ggdraw(pScatter)
+  
+  if (xaxis == "Include") {
+    right_arrow <- linesGrob(x = unit(c(RIGHT_ARROW_START, RIGHT_ARROW_END), "npc"), y = unit(c(xposition, xposition), "npc"),
+                             arrow = arrow(ends = "last", type = "closed", length = unit(2, "mm")))
+    left_arrow <- linesGrob(x = unit(c(LEFT_ARROW_START, LEFT_ARROW_END), "npc"), y = unit(c(xposition, xposition), "npc"),
+                            arrow = arrow(ends = "first", type = "closed", length = unit(2, "mm")))
+    p <- p +
+      draw_grob(right_arrow) +
+      draw_grob(left_arrow) +
+      draw_label(left_text, x = LEFT_TEXT, y = xposition, hjust = 0,vjust = 0.25, fontface = "bold", size = 6, fontfamily = HEAVY_FONT) +
+      draw_label(right_text, x = RIGHT_TEXT, y = xposition, hjust = 1, vjust = 0.25, fontface = "bold", size = 6, fontfamily = HEAVY_FONT)
+  }
+  
+  if (yaxis == "Include") {
+    up_arrow <- linesGrob(x = unit(c(yposition, yposition), "npc"), y = unit(c(UP_ARROW_START, UP_ARROW_END), "npc"),
+                          arrow = arrow(ends = "last", type = "closed", length = unit(2, "mm")))
+    down_arrow <- linesGrob(x = unit(c(yposition, yposition), "npc"), y = unit(c(DOWN_ARROW_START, DOWN_ARROW_END), "npc"),
+                            arrow = arrow(ends = "first", type = "closed", length = unit(2, "mm")))
+    p <- p +
+      draw_grob(up_arrow) +
+      draw_grob(down_arrow) +
+      draw_label(down_text, x = yposition, y = DOWN_TEXT, hjust = 0, vjust = 0.25, angle = 90, fontface = "bold", size = 6, fontfamily = HEAVY_FONT) +
+      draw_label(up_text, x = yposition, y = UP_TEXT, hjust = 1, vjust = 0.25, angle = 90, fontface = "bold", size = 6, fontfamily = HEAVY_FONT)
+  }
+  
+  return(p)
+}

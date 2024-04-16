@@ -38,7 +38,6 @@ CHART_EconImpact.df <- econ_impact.df %>%
   summarise(value = sum(value)) %>%
   ungroup()
 
-
 p <- ggplot(data = CHART_EconImpact.df, aes(x = year, y = value/10^12)) +
   geom_line (size = 0.75, color = 'red') +
   scale_x_continuous (breaks = c(2008:2022)) +
