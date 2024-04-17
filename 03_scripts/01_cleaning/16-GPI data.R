@@ -47,26 +47,49 @@
 
 # Homicide ----------------------------------------------------------------
 
-gpidata <- rio::import("02_data/processed/Econ-costing-data-2023.xlsx") %>% 
-  rename(iso3c=geocode, indicator = element)
+# gpidata <- rio::import("02_data/processed/Econ-costing-data-2023.xlsx") %>% 
+#   rename(iso3c=geocode, indicator = element)
+
+
+gpidata <- readRDS("02_data/processed/GPI_2024_EconomicCosting.rds")  
+  
+
+gpidata <- pivot_longer(data = gpidata,
+                        cols = c(3:11),
+                        names_to = "element",
+                        values_to = "value")
+
+
+gpidata <- gpidata %>% 
+     rename(iso3c=geocode, indicator = element)
+  
+
 
 gpidata <- gpidata %>% mutate (indicator = case_when (indicator == "Terrorism deaths" ~ "killed",
                                                       indicator == "Military expenditure % GDP" ~ "military expenditure (% gdp)",
                                                       indicator == "Fear % population" ~ "perceptions of criminality",
-                                                      indicator == "Homicides per 100,000" ~ "homicide rate",
+                                                      indicator == "homicides" ~ "homicide rate",
                                                       indicator == "Refugees and IDPs" ~ "refugees and idps",
-                                                      indicator == "Incarceration rate per 100,000" ~ "incarceration rate",
+                                                      indicator == "incarceration" ~ "incarceration rate",
                                                       indicator == "Peacekeeping" ~ "un peacekeeping funding",
                                                       TRUE ~ indicator))
 
 
+
+
 homicide <- gpidata %>% 
-  subset(indicator=="homicide rate") %>% 
-  merge(pop[,c("iso3c","year","population")], by=c("iso3c", "year")) %>% 
-  rename(pop=population) %>% 
-  mutate(poprate=pop/100000) %>% 
-  mutate(value=poprate*value) %>% 
-  subset(select=c('iso3c','year','indicator','value'))
+  subset(indicator=="homicide rate") %>%
+  dplyr::select(c(`iso3c`, `year`, `indicator`, `value`))
+
+
+# 
+# homicide <- gpidata %>% 
+#   subset(indicator=="homicide rate") %>% 
+#   merge(pop[,c("iso3c","year","population")], by=c("iso3c", "year")) %>% 
+#   rename(pop=population) %>% 
+#   mutate(poprate=pop/100000) %>% 
+#   mutate(value=poprate*value) %>% 
+#   subset(select=c('iso3c','year','indicator','value'))
 
 
 homicide <- gpi.grid %>% left_join(homicide)
@@ -82,14 +105,23 @@ homicide <- gpi.grid %>% left_join(homicide)
 
 # incarceration rate ------------------------------------------------------
 
-incar <- gpidata %>% 
-  subset(indicator=="incarceration rate") %>%  
-  merge(pop[,c("iso3c","year","population")], by=c("iso3c", "year")) %>% 
-  rename(pop=population) %>% 
-  mutate(poprate=pop/100000) %>% 
-  mutate(value=poprate*value) %>% 
-  subset(select=c(iso3c,year,indicator,value))
 
+incar <- gpidata%>% 
+  subset(indicator=="incarceration rate") %>%
+  dplyr::select(c(`iso3c`, `year`, `indicator`, `value`))
+
+
+
+# 
+# 
+# incar <- gpidata %>% 
+#   subset(indicator=="incarceration rate") %>%  
+#   merge(pop[,c("iso3c","year","population")], by=c("iso3c", "year")) %>% 
+#   rename(pop=population) %>% 
+#   mutate(poprate=pop/100000) %>% 
+#   mutate(value=poprate*value) %>% 
+#   subset(select=c(iso3c,year,indicator,value))
+# 
 
 incar <- gpi.grid %>% left_join(incar, by = c("iso3c", "year"))
 
@@ -107,12 +139,15 @@ incar <- gpi.grid %>% left_join(incar, by = c("iso3c", "year"))
 # conflcit deaths -------------------------------------------------------------
 
 conflict <- gpidata %>% 
-  subset(indicator== "Battle deaths")
+  subset(indicator== "battle_deaths")
 
 conflict <- gpi.grid %>% left_join(conflict)
 
+conflict <- conflict %>% dplyr::select(c(`year`, `iso3c`, `indicator`, `value`))
 
 conflict <- conflict  %>% rename (geocode = iso3c, variablename = indicator) 
+
+conflict$variablename[is.na(conflict$variablename)] <- "battle_deaths"
 
 conflict <- f_index_data_pad(conflict)
 
@@ -126,7 +161,7 @@ pop3 <- pop %>% rename(pop=population)
 
 
 refugidp <- gpidata %>% 
-  subset(indicator=="refugees and idps" ) %>% 
+  subset(indicator=="displaced" ) %>% 
   merge(pop3[,c("iso3c","year","pop")], by=c("iso3c", "year")) %>%  
   subset(select=c(iso3c,year,indicator,value)) %>% 
   rename(refug=value)
@@ -165,11 +200,11 @@ gdplosses <- conflict %>%
   subset(select=c(iso3c,year,gdplosses))
 
 
-gdplosses <- subset(gdplosses,!(iso3c=="PSE" & year<2015))
-gdplosses <- subset(gdplosses,!(iso3c=="SSD" & year<2010))
+# gdplosses <- subset(gdplosses,!(iso3c=="PSE" & year<2015))
+# gdplosses <- subset(gdplosses,!(iso3c=="SSD" & year<2010))
 gdplosses <- subset(gdplosses,!(year<2007))
 # gdplosses <- subset(gdplosses,!(year<2008))
-gdplosses <- subset(gdplosses,!(year>2022))
+gdplosses <- subset(gdplosses,!(year>2023))
 # gdplosses <- subset(gdplosses,!(year>2023))
 
 

@@ -3,7 +3,7 @@
 
 wdi.all <- f_get.wdi("all",c("NY.GDP.PCAP.PP.KD", "PA.NUS.PPPC.RF", "NY.GDP.DEFL.ZS",
                            "NY.GDP.PCAP.CD", "NY.GDP.PCAP.KD"),
-                   2007,2022) %>% mutate(year = year+1)
+                   2007,2023) %>% mutate(year = year+1)
 
 wdi.data <- wdi.all %>% 
   rename('GDP per cap PPP Constant 2017' = NY.GDP.PCAP.PP.KD,  
@@ -75,6 +75,11 @@ gdp.wdi <- gdp.wdi %>% group_by (iso3c, year ) %>% pivot_wider(names_from = vari
                        rename (gdp = 'GDP per cap Current', gdpcons = 'GDP per cap Constant', gdpconsppp = 'GDP per cap PPP Constant 2017') %>%
                        select (iso3c, year, gdp, gdpcons, gdpconsppp)
 
+gdp.wdi$gdpcons <- as.numeric(as.character(gdp.wdi$gdpcons))
+gdp.wdi$gdp <- as.numeric(as.character(gdp.wdi$gdp))
+gdp.wdi$gdpconsppp <- as.numeric(as.character(gdp.wdi$gdpconsppp))
+
+
 gdp.wdi <- gdp.wdi %>% mutate (gdpcons = 1 / .87 * gdpcons) # turning WDI constant 2015 to constant 2022
 
 
@@ -100,9 +105,9 @@ deflator <- wdi.data %>% dplyr::filter (variablename == "GDP Deflator")
 deflator <- deflator %>% select (geocode, year, value) %>% rename (iso3c = geocode)
 
 
-deflator_2022 <- deflator %>% dplyr::filter (year == 2022)
+deflator_2023 <- deflator %>% dplyr::filter (year == 2023)
 
-deflator <- deflator %>% left_join(deflator_2022, by = "iso3c")
+deflator <- deflator %>% left_join(deflator_2023, by = "iso3c")
 
 deflator <- deflator %>% select (iso3c, year.x, value.x, value.y) %>%
   mutate (value.x = value.x / value.y) %>%
@@ -113,7 +118,7 @@ deflator <- deflator %>% rename (deflator = value)
 
 deflator <- deflator %>% group_by(year) %>% summarize (deflator = median(deflator)) # using median deflator for all countries
 
-rm(deflator_2022)
+rm(deflator_2023)
 
 # ==============================================================================================================================
 

@@ -40,9 +40,9 @@ count_of_missing <- count_of_missing %>%  mutate(Freq=as.numeric(Freq))
 for(c in 1:nrow(count_of_missing)){
   if(count_of_missing[c,"Var1"]=="PSE" & count_of_missing[c,"Freq"]==8) {
     count_of_missing[c,"new"]<-"delete"}
-  else if(count_of_missing[c,"Var1"]=="SSD" & count_of_missing[c,"Freq"]==14) {
+  else if(count_of_missing[c,"Var1"]=="SSD" & count_of_missing[c,"Freq"]==15) {
     count_of_missing[c,"new"]<-"delete"}
-  else if(count_of_missing[c,"Freq"]==15) {
+  else if(count_of_missing[c,"Freq"]==16) {
     count_of_missing[c,"new"]<-"delete"}
   else {count_of_missing[c,"new"] <- "keep"}
 }
@@ -64,6 +64,7 @@ violent.assault <- violent.assault %>% select(iso3c, variablename, year, value) 
   mutate(value=as.numeric(value)) %>% mutate(variablename="violent assault")
 
 violent.assault <- f_index_data_pad(violent.assault)
+
 
 violent.assault <- violent.assault %>% select("geocode"    ,     "year"   , "imputed"  ,       "variablename") %>%
   rename(iso3c=geocode, value=imputed)
@@ -178,11 +179,11 @@ count_of_missing <- count_of_missing %>%  mutate(Freq=as.numeric(Freq))
 #it is saying if it has zero values (14 NAs) then write delete, PSE and SSD are exceptions 
 
 for(c in 1:nrow(count_of_missing)){
-  if(count_of_missing[c,"Var1"]=="PSE" & count_of_missing[c,"Freq"]==9) {
+  if(count_of_missing[c,"Var1"]=="PSE" & count_of_missing[c,"Freq"]==10) {
     count_of_missing[c,"new"]<-"delete"}
-  else if(count_of_missing[c,"Var1"]=="SSD" & count_of_missing[c,"Freq"]==14) {
+  else if(count_of_missing[c,"Var1"]=="SSD" & count_of_missing[c,"Freq"]==15) {
     count_of_missing[c,"new"]<-"delete"}
-  else if(count_of_missing[c,"Freq"]==15) {
+  else if(count_of_missing[c,"Freq"]==16) {
     count_of_missing[c,"new"]<-"delete"}
   else {count_of_missing[c,"new"] <- "keep"}
 }
@@ -272,8 +273,8 @@ rm(sexual.assault.peace.level)
 
 # sexual.assault <- rbind(sexual.assault, sexual.assault_missing)
 sexual.assault <- sexual.assault[sexual.assault$iso3c %in% pos,]
-sexual.assault <- subset(sexual.assault,!(iso3c=="PSE" & year<2014))
-sexual.assault <- subset(sexual.assault,!(iso3c=="SSD" & year<2009))
+# sexual.assault <- subset(sexual.assault,!(iso3c=="PSE" & year<2014))
+# sexual.assault <- subset(sexual.assault,!(iso3c=="SSD" & year<2009))
 
 
 

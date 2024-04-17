@@ -30,8 +30,8 @@ pos.exp <- pos.exp %>% mutate(value=round(value,1))
 gpi.grid.tmp <- gpi.grid %>% mutate(count=1) %>% spread(year,count) %>% 
   gather(year, count, -iso3c) %>% select(year,iso3c) %>% mutate(year=as.numeric(as.character(year)))
 
-gpi.grid.tmp <- subset(gpi.grid.tmp,!(iso3c=="PSE" & year<2014))
-gpi.grid.tmp <- subset(gpi.grid.tmp,!(iso3c=="SSD" & year<2009))
+# gpi.grid.tmp <- subset(gpi.grid.tmp,!(iso3c=="PSE" & year<2014))
+# gpi.grid.tmp <- subset(gpi.grid.tmp,!(iso3c=="SSD" & year<2009))
 
 #work out who is missing data
 pos.exp <- gpi.grid.tmp %>% left_join(pos.exp)
@@ -54,11 +54,11 @@ count_of_missing <- count_of_missing %>%  mutate(Freq=as.numeric(Freq))
 #it is saying if it has zero values (14 NAs) then write delete, PSE and SSD are exceptions 
 
 for(c in 1:nrow(count_of_missing)){
-  if(count_of_missing[c,"Var1"]=="PSE" & count_of_missing[c,"Freq"]==9) {
+  if(count_of_missing[c,"Var1"]=="PSE" & count_of_missing[c,"Freq"]==10) {
     count_of_missing[c,"new"]<-"delete"}
-  else if(count_of_missing[c,"Var1"]=="SSD" & count_of_missing[c,"Freq"]==14) {
+  else if(count_of_missing[c,"Var1"]=="SSD" & count_of_missing[c,"Freq"]==15) {
     count_of_missing[c,"new"]<-"delete"}
-  else if(count_of_missing[c,"Freq"]==15) {
+  else if(count_of_missing[c,"Freq"]==16) {
     count_of_missing[c,"new"]<-"delete"}
   else {count_of_missing[c,"new"] <- "keep"}
 }
@@ -87,8 +87,8 @@ pos.exp <- pos.exp %>% select("geocode"    ,     "year"   , "imputed"  ,       "
 #pos.exp <- pos.exp[pos.exp$year>2005,]
 pos.exp <- pos.exp[pos.exp$year>2006,]
 pos.exp <- pos.exp[pos.exp$iso3c %in% pos,]
-pos.exp <- subset(pos.exp,!(iso3c=="PSE" & year<2014))
-pos.exp <- subset(pos.exp,!(iso3c=="SSD" & year<2009))
+# pos.exp <- subset(pos.exp,!(iso3c=="PSE" & year<2014))
+# pos.exp <- subset(pos.exp,!(iso3c=="SSD" & year<2009))
 pos.exp <- subset(pos.exp,!(year<2006))
 #pos.exp <- subset(pos.exp,!(year<2007))
 
@@ -118,15 +118,19 @@ pos.intsec <- unique(pos.exp1$iso3c)
 #########################################################   FOR MISSING Data    ################################################
 #fill in the police rate
 #gpidata <- read.csv("Data/dashboard data.csv") %>%
-gpidata <- rio::import("02_data/processed/GPI_2023_FINAL.xlsx") %>%
-  select (c(1:8)) %>% 
+
+
+
+gpidata <- rio::import("02_data/processed/GPI_2024_FINAL.xlsx") %>%
+  select (c(1:5,7,10,12)) %>%
   mutate (year = year - 1) %>%
-  subset(type=="raw") %>%  
-  rename(iso3c=geocode, indicator = variablename, govt = government) %>%
-  subset(select=-type) %>% 
-  select(-region) %>%select(-govt) %>% 
+  subset(type=="raw") %>%
+  rename(iso3c=geocode, govt = government) %>%
+  subset(select=-type) %>%
+  select(-region) %>%select(-govt) %>%
   mutate(value=as.numeric(as.character(value))) %>%
-  subset(!year==2022)
+  # subset(!year==2022)
+  subset(!year==2023)
 
 
 
@@ -157,9 +161,9 @@ pos.exp <- pos.exp %>% rbind(pos.exp1)
 
 pos.exp <- gpi.grid %>% left_join(pos.exp)
 
-pos.exp <- subset(pos.exp,!(iso3c=="PSE" & year<2014))
-pos.exp <- subset(pos.exp,!(iso3c=="SSD" & year<2009))
-
+# pos.exp <- subset(pos.exp,!(iso3c=="PSE" & year<2014))
+# pos.exp <- subset(pos.exp,!(iso3c=="SSD" & year<2009))
+# 
 
 pos.exp3 <- rename(pos.exp,value=intsecu)
 
@@ -174,9 +178,13 @@ count <- pos.exp3 %>% group_by(iso3c) %>% tally()
 
 pos.exp <- pos.exp %>% rename (geocode = iso3c, value = intsecu) %>% mutate (variablename = "internal security")
 
+# pos.exp <- pos.exp %>% group_by(geocode) %>%
+#   fill(value, .direction = "downup")
+
 pos.exp <- f_index_data_pad(pos.exp)
 
 
 pos.exp <- pos.exp %>% select (c(1, 2, 5)) %>% rename (iso3c = geocode, intsecu = imputed)
 
 pos.exp <- gpi.grid %>% left_join(pos.exp)
+

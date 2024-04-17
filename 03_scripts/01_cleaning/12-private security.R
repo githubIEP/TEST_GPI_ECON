@@ -65,7 +65,8 @@ priv.secu <- read_csv("02_data/processed/private security numbers updated 2021.c
   select(-`...1`) %>%
   gather(year,value, -c("country","iso3c")) %>% select(-country)
 
-
+priv.secu$year <- as.numeric(as.character(priv.secu$year))
+priv.secu <- priv.secu %>% mutate(year = year+1)
 
 priv.secu <-   priv.secu %>% mutate(value=as.numeric(as.character(gsub(",","",value)))) %>%
   mutate(year=as.numeric(as.character(gsub(",","",year)))) 

@@ -40,14 +40,14 @@ pb <- pb %>% subset(Donor=="Official Donors, Total") %>%
   subset(Flow.type=="Gross Disbursements") 
 
 
-pb <- pb %>% mutate(Year = Year+2) %>% group_by(Year, iso3c, Recipient) %>% 
+pb <- pb %>% mutate(Year = Year+3) %>% group_by(Year, iso3c, Recipient) %>% 
   summarise(value=sum(Value, na.rm = TRUE)) %>% mutate(variablename = "peacebuilding") %>%
   rename(country=Recipient) %>%
   rename(year = "Year") 
-
-
-pb <- subset(pb,!(iso3c=="PSE" & year<2015))
-pb <- subset(pb,!(iso3c=="SSD" & year<2010))
+# 
+# 
+# pb <- subset(pb,!(iso3c=="PSE" & year<2015))
+# pb <- subset(pb,!(iso3c=="SSD" & year<2010))
 
 
 pb$value <- pb$value*10^6

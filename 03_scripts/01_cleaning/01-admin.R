@@ -1,16 +1,37 @@
 
 # GPI data ----------------------------------------------------------------
 
-gpidata <- rio::import("02_data/processed/Econ-costing-data-2023.xlsx") %>% 
+gpidata <- readRDS("02_data/processed/GPI_2024_EconomicCosting.rds")
+
+gpidata <- pivot_longer(data = gpidata,
+                        cols = c(3:11),
+                        names_to = "element",
+                        values_to = "value")
+
+
+gpidata <- gpidata %>% 
   rename(iso3c=geocode, indicator = element) %>% 
   mutate (indicator = case_when (indicator == "Terrorism deaths" ~ "killed",
-  indicator == "Military expenditure % GDP" ~ "military expenditure (% gdp)",
-  indicator == "Fear % population" ~ "perceptions of criminality",
-  indicator == "Homicides per 100,000" ~ "homicide rate",
-  indicator == "Refugees and IDPs" ~ "refugees and idps",
-  indicator == "Incarceration rate per 100,000" ~ "incarceration rate",
-  indicator == "Peacekeeping" ~ "un peacekeeping funding",
-  TRUE ~ indicator))
+                                 indicator == "Military expenditure % GDP" ~ "military expenditure (% gdp)",
+                                 indicator == "fear" ~ "perceptions of criminality",
+                                 indicator == "Homicides per 100,000" ~ "homicide rate",
+                                 indicator == "displaced" ~ "refugees and idps",
+                                 indicator == "Incarceration rate per 100,000" ~ "incarceration rate",
+                                 indicator == "assessments" ~ "un peacekeeping funding",
+                                 TRUE ~ indicator))
+
+
+# 
+# gpidata <- rio::import("02_data/processed/Econ-costing-data-2023.xlsx") %>% 
+#   rename(iso3c=geocode, indicator = element) %>% 
+#   mutate (indicator = case_when (indicator == "Terrorism deaths" ~ "killed",
+#   indicator == "Military expenditure % GDP" ~ "military expenditure (% gdp)",
+#   indicator == "Fear % population" ~ "perceptions of criminality",
+#   indicator == "Homicides per 100,000" ~ "homicide rate",
+#   indicator == "Refugees and IDPs" ~ "refugees and idps",
+#   indicator == "Incarceration rate per 100,000" ~ "incarceration rate",
+#   indicator == "Peacekeeping" ~ "un peacekeeping funding",
+#   TRUE ~ indicator))
 
 # Filter to get only GPI countries from WDI -------------------------------------------
 
@@ -21,10 +42,14 @@ pos <- unique(gpidata$iso3c)
 # GPI grid ----------------------------------------------------------------
 
 gpi.country <- read_csv("02_data/processed/gpi.country.csv")
-#gpi.grid <- expand.grid(year=c(2007:2021), iso3c=unique(gpi.country$iso3c))
-gpi.grid <- expand.grid(year=c(2008:2022), iso3c=unique(gpi.country$iso3c))
-gpi.grid <- subset(gpi.grid,!(iso3c=="PSE" & year<2014))
-gpi.grid <- subset(gpi.grid,!(iso3c=="SSD" & year<2009))
+
+gpi.grid <- gpi.country[["iso3c"]]
+# 
+# #gpi.grid <- expand.grid(year=c(2007:2021), iso3c=unique(gpi.country$iso3c))
+# # gpi.grid <- expand.grid(year=c(2008:2022), iso3c=unique(gpi.country$iso3c))
+ gpi.grid <- expand.grid(year=c(2008:2023), iso3c=unique(gpi.country$iso3c))
+# gpi.grid <- subset(gpi.grid,!(iso3c=="PSE" & year<2014))
+# gpi.grid <- subset(gpi.grid,!(iso3c=="SSD" & year<2009))
 
 # function to get data from WEO -------------------------------------------
 
@@ -94,7 +119,7 @@ pop <- f_index_data_pad(pop)
 
 pop %<>% select (c(1, 2, 5)) %>% rename (iso3c = geocode, population = imputed)
 
+# pop = pop %>% complete(iso3c = gpi.grid, year)
 
-
-pop <- gpi.grid %>% left_join(pop)
+# pop <- gpi.grid %>% left_join(pop)
 

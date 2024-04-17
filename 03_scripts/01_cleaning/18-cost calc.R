@@ -43,7 +43,7 @@ unitcost.var <- merge(unitcost.var, refugidp[,c("iso3c","year","refugeidp")],
                       by=c("iso3c", 'year'))
 
 unitcost.var2 <- unitcost.var %>% 
-  subset(select=c(1:2,24:39)) %>% 
+  subset(select=c(1:2,25:40)) %>% 
   gather(indicator,value,-c(iso3c,year)) %>% 
   separate(indicator,c("indicator","type","cost")) %>% 
   subset(select=-cost) %>% mutate(type=ifelse(indicator=="refugeidp","indir",type)) %>% 
@@ -257,13 +257,13 @@ p = tmp %>% ggplot(aes(x = year, y = total/10^12)) +
   # scale_y_continuous (breaks = c(15000000000000, 16000000000000, 17000000000000, 
   #                                18000000000000, 19000000000000, 20000000000000),
   #                     labels = c("15", "16", "17", "18", "19", "20")) +
-  scale_x_continuous (breaks = c(2008:2022)) + 
+  scale_x_continuous (breaks = c(2008:2023)) + 
   labs(y = "Total Cost (Constant 2022 US$ PPP, trillions)")
 print(p)
 
 
 
-rio::export(econcost, "04_outputs/Economic Impact of Violence.xlsx")
+rio::export(econcost, "04_outputs/Economic Impact of Violence1.xlsx")
 
 
 

@@ -6,11 +6,17 @@ small.arms <- read_excel("02_data/processed/Small arms survey data 2020.xlsx", s
 small.arms <- small.arms %>% mutate(year=as.numeric(as.character(gsub("X","", year)))) %>% 
   mutate(value=as.numeric(as.character(gsub(",","",value)))) %>% 
   mutate(iso3c=countrycode(Country, "country.name","iso3c")) %>%
-  mutate (year = year + 2)
+  mutate (year = year + 3)
 
 
 
 small.arms <- gpi.grid %>% left_join(small.arms) %>% select (-Country) 
+
+# small.arms <- small.arms %>% group_by(iso3c) %>%
+#   fill(value, .direction = "downup")
+
+
+
 
 small.arms <- small.arms %>% rename (geocode = iso3c) %>% dplyr::filter (complete.cases(value)) 
 

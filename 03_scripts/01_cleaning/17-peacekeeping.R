@@ -1,6 +1,6 @@
 
 
-peacekeeping <- gpidata %>% dplyr::filter (indicator == "un peacekeeping funding") %>%
+peacekeeping <- gpidata %>% dplyr::filter (indicator == "assessments") %>%
                             rename (peacekeep = value) %>% select (iso3c, year, peacekeep)
 peacekeeping <- gpi.grid %>% left_join(peacekeeping)
 
