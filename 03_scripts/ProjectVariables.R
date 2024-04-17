@@ -14,7 +14,7 @@ CHART_UNIT = "cm"
 
 ONEDRIVE = paste0(IEP_USERPATH,"/Global Peace Index/",REPORT_YEAR," GPI")
 
-CHARTBOOK_1 = paste0(ONEDRIVE,"/Layout/Charts/GPI_EconCostingChartbook_",REPORT_YEAR,".xlsx")
+CHARTBOOK_3 = paste0(ONEDRIVE,"/Layout/Charts/GPI_EconCostingChartbook_",REPORT_YEAR,".xlsx")
 
 CHART_FILES = paste0(ONEDRIVE,"/Layout/Charts")
 IMAGE_FILES = paste0(ONEDRIVE,"/Layout/Images")
