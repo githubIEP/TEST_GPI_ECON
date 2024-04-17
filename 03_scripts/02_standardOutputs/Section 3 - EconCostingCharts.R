@@ -12,6 +12,7 @@ library(dplyr)
 library(scales)
 library(cowplot)
 library(grid)
+library(iepsqlite)
 
 ## -- Spreadsheet to save charts in
 wb_Ssection3 <- createWorkbook()
@@ -56,11 +57,38 @@ CHART_ArmedViolence = c(title = "Breakdown of the global economic impact of the 
                       sheet = "ArmedViolence", source = "IEP Calculations", xtext = "", ytext = "",
                       type = "Chart", position = "Normal")
 
-# Military expenditure: total, per capita, and as percentage of GDP, 2022
+# Composition of the economic impact of Interpersonal Violence and Self-inflicted Violence domain, 2022
+CHART_InterpersonalViolence = c(title = "Composition of the economic impact of Interpersonal Violence and Self-inflicted Violence domain, 2022",
+                  sheet = "Interpersonal", source = "IEP Calculations", xtext = "", ytext = "",
+                  type = "Chart", position = "Normal")
 
+# Composition of the Violence Containment domain, 2022
+CHART_ViolenceContainment = c(title = "Composition of the Violence Containment domain, 2022",
+                                sheet = "ViolenceContainment", source = "IEP Calculations", xtext = "", ytext = "",
+                                type = "Chart", position = "Normal")
+
+# Per capita containment spending (military and internal security) by region, 2022 
+CHART_PerCap = c(title = "Per capita containment spending (military and internal security) by region, 2022",
+                              sheet = "ViolenceContainment", source = "IEP Calculations", xtext = "CONSTANT 2022 PPP, PER PERSON", ytext = "",
+                              type = "Chart", position = "Normal")
+
+# Military expenditure: total, per capita, and as percentage of GDP, 2022
 TABLE_MEx = c(title = "Military expenditure: total, per capita, and as percentage of GDP, 2022",
                        sheet = "MEx", source = "IEP Calculations", xtext = "", ytext = "",
                        type = "Table", position = "Normal")
+
+
+# Total economic impact by region
+CHART_EconImpact = c(title = "Total Economic Impact by Region",
+                     sheet = "EconImpact", source = "IEP Calculations", xtext = "CONSTANT 2022 PPP, BILLIONS", ytext = "",
+                     type = "Chart", position = "Normal")
+
+
+# Percentage Change in Economic Impact by Region (2021 to 2022)
+CHART_EconImpactChange = c(title = "Percentage Change in Economic Impact by Region (2021 to 2022)",
+                     sheet = "EconImpactChange", source = "IEP Calculations", xtext = "PERCENTAGE CHANGE", ytext = "",
+                     type = "Chart", position = "Normal")
+
 
 # The ten countries with the highest economic cost of violence, percentage of GDP
 TABLE_TenCountries = c(title = "The Ten Countries with the Highest Economic Cost of Violence, Percentage of GDP",
@@ -296,7 +324,7 @@ tab_ArmedConflict <- econ_impact.df %>%
     x_pos = if_else(prop > 0.2, 3.5, 4.5),  # Adjust 0.1 as needed for your data
     hjust = if_else(prop > 0.2, 0.5, 1))
 
-CHART_ArmedViolence <- ggplot(tab_ArmedConflict, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = indicator2)) +
+pCHART_ArmedViolence <- ggplot(tab_ArmedConflict, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = indicator2)) +
   geom_rect() +
   geom_text(data = tab_ArmedConflict, aes(x = 4.5, y = labelPosition, label = label), hjust = 1, size = 3) +  
   geom_segment(data = tab_ArmedConflict, aes(x = 4, y = labelPosition, xend = 4.4, yend = labelPosition), color = "black") +  
@@ -314,6 +342,143 @@ pCHART_ArmedViolence <- f_ThemeTraining(plot = pCHART_ArmedViolence,
                                         yaxis = "", 
                                         xgridline = "", 
                                         ygridline = "") +
+  theme(legend.position = "none")
+
+## -- CHART_InterpersonalViolence -----------------------------------------------------------
+# A pie chart breakdown of the global economic impact of the Interpersonal and Self-Inflicted Violence domain
+
+tab_InterpersonalViolence <- econ_impact.df %>%
+  dplyr::filter(year == max(year), subtype == "impact",
+                indicator2 %in% c("Homicide",
+                                  "Violent crime",
+                                  "incarceration",
+                                  "Fear",                                  
+                                  "Suicide")) %>%
+  group_by(indicator2) %>%
+  summarise(value = sum(value)) %>%
+  ungroup() %>%
+  arrange(desc(value)) %>%
+  mutate(
+    prop = (value / sum(value)),
+    prop = round(prop, 2), 
+    ymax = cumsum(prop),
+    ymin = c(0, head(ymax, n = -1)),
+    labelPosition = (ymax + ymin) / 2,
+    label = paste0(indicator2, "\n", prop*100, "%"),
+    x_pos = if_else(prop > 0.2, 3.5, 4.5),  # Adjust 0.1 as needed for your data
+    hjust = if_else(prop > 0.2, 0.5, 1))
+
+pCHART_InterpersonalViolence <- ggplot(tab_InterpersonalViolence, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = indicator2)) +
+  geom_rect() +
+  geom_text(data = tab_InterpersonalViolence, aes(x = 4.5, y = labelPosition, label = label), hjust = 1, size = 3) +  
+  geom_segment(data = tab_InterpersonalViolence, aes(x = 4, y = labelPosition, xend = 4.4, yend = labelPosition), color = "black") +  
+  scale_fill_brewer(palette = 4) +
+  coord_polar(theta = "y") +
+  xlim(c(2, 5.5)) +  
+  theme_void() +
+  theme(legend.position = "none") +
+  annotate("text", x = 0, y = 0, label = "Interpersonal and Self-Inflicted Violence")
+
+pCHART_InterpersonalViolence <- f_ThemeTraining(plot = pCHART_InterpersonalViolence, 
+                                        chart_info = CHART_InterpersonalViolence, 
+                                        plottitle = "Include", 
+                                        xaxis = "", 
+                                        yaxis = "", 
+                                        xgridline = "", 
+                                        ygridline = "") +
+  theme(legend.position = "none")
+
+
+
+## -- CHART_ViolenceContainment -----------------------------------------------------------
+# A pie chart breakdown of the global economic impact of the Violence Containment domain
+
+tab_ViolenceContainment <- econ_impact.df %>%
+  dplyr::filter(year == max(year), subtype == "impact",
+indicator2 %in% c("Military expenditure",
+                                  "Internal security expenditure",
+                                  "Private security",
+                                  "Peacebuilding",                                  
+                                  "Peacekeeping")) %>%
+  group_by(indicator2) %>%
+  summarise(value = sum(value)) %>%
+  ungroup() %>%
+  arrange(desc(value)) %>%
+  mutate(
+    prop = (value / sum(value)),
+    prop = round(prop, 2), 
+    ymax = cumsum(prop),
+    ymin = c(0, head(ymax, n = -1)),
+    labelPosition = (ymax + ymin) / 2,
+    label = paste0(indicator2, "\n", prop*100, "%"),
+    x_pos = if_else(prop > 0.2, 3.5, 4.5),  # Adjust 0.1 as needed for your data
+    hjust = if_else(prop > 0.2, 0.5, 1))
+
+pCHART_ViolenceContainment <- ggplot(tab_ViolenceContainment, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = indicator2)) +
+  geom_rect() +
+  geom_text(data = tab_ViolenceContainment, aes(x = 4.5, y = labelPosition, label = label), hjust = 1, size = 3) +  
+  geom_segment(data = tab_ViolenceContainment, aes(x = 4, y = labelPosition, xend = 4.4, yend = labelPosition), color = "black") +  
+  scale_fill_brewer(palette = 4) +
+  coord_polar(theta = "y") +
+  xlim(c(2, 5.5)) +  
+  theme_void() +
+  theme(legend.position = "none") +
+  annotate("text", x = 0, y = 0, label = "Interpersonal and Self-Inflicted Violence")
+
+pCHART_ViolenceContainment <- f_ThemeTraining(plot = pCHART_ViolenceContainment, 
+                                                chart_info = CHART_ViolenceContainment, 
+                                                plottitle = "Include", 
+                                                xaxis = "", 
+                                                yaxis = "", 
+                                                xgridline = "", 
+                                                ygridline = "") +
+  theme(legend.position = "none")
+
+## -- CHART_PerCap -----------------------------------------------------------
+# Bar chart showing the per capita containment spending by region
+
+tab_PerCap <- econ_impact.df %>%
+  rename(ID_0 = iso3c) %>%
+  add_region() %>%
+  dplyr::filter(year == max(year), subtype == "impact",
+  indicator2 %in% c("Military expenditure", "Internal security expenditure",
+                           "Private security", "Peacekeeping", "Peacebuilding")) %>%
+  select(ID_0, region, indicator2, value) %>%
+  replace_na(list(iso3c = "KSV", region = "Europe")) %>%
+  group_by(region) %>%
+  summarise(value = sum(value))
+
+tab_Pop <- econ_impact.df %>%
+  dplyr::filter(year == max(year), subtype == "pop", 
+                indicator=="milex") %>%
+  select(iso3c, value) %>%
+  rename(population = value, ID_0=iso3c) %>%
+  add_region() %>%
+  replace_na(list(iso3c = "KSV", region = "Europe")) %>%
+  group_by(region) %>%
+  summarise(population = sum(population))
+
+tab_PerCap <- tab_PerCap %>%
+  left_join(tab_Pop) %>%
+  group_by(region) %>%
+  mutate(per_cap = value/population) %>%
+  arrange(desc(per_cap))
+
+pCHART_PerCap <- ggplot(tab_PerCap, aes(x = per_cap, y = reorder(region, -per_cap), fill = region)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = rep("navy", 9), guide = FALSE) + 
+  scale_x_continuous(labels = scales::dollar_format(prefix = "$", big.mark = ",")) +
+  theme(panel.grid.major.x = element_line(color = "grey", linetype = "solid"),
+        panel.grid.minor.x = element_blank(),
+        axis.text.y = element_text(face = "bold"))                  
+
+pCHART_PerCap <- f_ThemeTraining(plot = pCHART_PerCap, 
+                                              chart_info = CHART_PerCap, 
+                                              plottitle = "", 
+                                              xaxis = "", 
+                                              yaxis = "Include", 
+                                              xgridline = "Include", 
+                                              ygridline = "") +
   theme(legend.position = "none")
 
 ## -- TABLE_MEx -----------------------------------------------------------
@@ -345,6 +510,63 @@ tab_GDPMEx <- econ_impact.df %>%
   slice(1:10) %>%
   select(country, value) %>%
   rename("COUNTRY" = country, "MILITARY EXPENDITURE (% OF GDP)" = value)
+
+## -- CHART_EconImpact -----------------------------------------------------------
+# A bar chart showing total economic impact by region
+
+tab_EconImpact <- econ_impact.df %>%
+  rename(ID_0 = iso3c) %>%
+  add_region() %>%
+  dplyr::filter(year == max(year), subtype == "impact") %>%
+  replace_na(list(iso3c = "KSV", region = "Europe")) %>%
+  group_by(region) %>%
+  summarise(total_impact = sum(value)/1000000000) %>%
+  arrange(desc(total_impact))
+
+pCHART_EconImpact <- ggplot(tab_EconImpact, aes(x = total_impact, y = reorder(region, total_impact), fill = region)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = scales::dollar(total_impact)), hjust = -0.2, size = 3) +
+  scale_fill_manual(values = rep("maroon", 9), guide = FALSE) +
+  scale_x_continuous(labels = scales::dollar_format(prefix = "$", big.mark = ","))                   
+
+pCHART_EconImpact <- f_ThemeTraining(plot = pCHART_EconImpact, 
+                                 chart_info = CHART_EconImpact, 
+                                 plottitle = "", 
+                                 xaxis = "", 
+                                 yaxis = "Include", 
+                                 xgridline = "Include", 
+                                 ygridline = "") +
+  theme(legend.position = "none")
+
+## -- CHART_EconImpactChange -----------------------------------------------------------
+# A bar chart showing percentage change in total economic impact by region, 2021-2022
+
+tab_EconImpactChange <- econ_impact.df %>%
+  rename(ID_0 = iso3c) %>%
+  add_region() %>%
+  dplyr::filter(year %in% c(max(year), max(year-1)), subtype == "impact") %>%
+  replace_na(list(iso3c = "KSV", region = "Europe")) %>%
+  group_by(region, year) %>%
+  summarise(total_impact = sum(value)/1000000000) %>%
+  ungroup() %>%
+  pivot_wider(names_from = year, values_from = total_impact) %>%
+  group_by(region) %>%
+  mutate(perc_change = sum(`2022`-`2021`)/`2021`) %>%
+  arrange(desc(`2022`))
+
+pCHART_EconImpactChange <- ggplot(tab_EconImpactChange, aes(x = perc_change, y = reorder(region, `2022`), fill = perc_change >= 0)) +
+  geom_bar(stat = "identity") + scale_fill_manual(values = c("green", "red"), guide = FALSE) +
+  geom_text(aes(label = scales::percent(perc_change, accuracy=1)), hjust = -0.2, size = 3) +
+  scale_x_continuous(labels = scales::percent_format(prefix = "", big.mark = ","))
+
+pCHART_EconImpactChange <- f_ThemeTraining(plot = pCHART_EconImpactChange, 
+                                     chart_info = CHART_EconImpactChange, 
+                                     plottitle = "", 
+                                     xaxis = "", 
+                                     yaxis = "Include", 
+                                     xgridline = "Include", 
+                                     ygridline = "") +
+  theme(legend.position = "none")
 
 ## -- TABLE_TenCountries -----------------------------------------------------------
 # A table of the ten countries with the highest economic cost of violence as a % of GDP
