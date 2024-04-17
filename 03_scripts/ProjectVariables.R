@@ -7,6 +7,8 @@ LATEST_YEAR = 2023
 FIRST_GPI_YEAR = 2011
 
 
+IEP_USERPATH = "C:\\Users\\KaranMenon\\OneDrive - Institute for Economics and Peace\\Institute for Economics and Peace"
+
 
 
 #### Charts
