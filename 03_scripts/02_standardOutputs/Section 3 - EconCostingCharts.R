@@ -101,7 +101,7 @@ CHART_Composition = c(title = "Composition of the regional economic cost of viol
 
 ### --- Loading Data
 
-econ_impact.df <- rio::import("04_outputs/Economic Impact of Violence.xlsx")
+econ_impact.df <- rio::import("04_outputs/Economic Impact of Violence_v2.xlsx")
 
 
 
@@ -156,7 +156,7 @@ pCHART_CompPie <- f_ThemeTraining(plot = pCHART_CompPie,
 # economic impact of violence, billions of PPP 2022 US dollars, 2021–2022
 
 TABLE_ImpactChange.df <- econ_impact.df %>%
-  dplyr::filter(year==max(year), subtype=="costusd") %>%
+  dplyr::filter(year==max(year), subtype=="costppp") %>%
   pivot_wider(names_from = type, values_from = value) %>%
   replace(is.na(.), 0) %>%
   group_by(indicator2, year) %>%
@@ -166,19 +166,19 @@ TABLE_ImpactChange.df <- econ_impact.df %>%
   select(-year)
 
 
-TABLE_ImpactChange_2021 <- econ_impact.df %>%
-  dplyr::filter(year==max(year-1), subtype=="costusd") %>%
+TABLE_ImpactChange_2022 <- econ_impact.df %>%
+  dplyr::filter(year==max(year-1), subtype=="costppp") %>%
   pivot_wider(names_from = type, values_from = value) %>%
   replace(is.na(.), 0) %>%
   group_by(indicator2, year) %>%
   summarise(direct = sum(direct)/1000000000, direct = round(direct, 0),
             indirect = sum(indirect)/1000000000, indirect = round(indirect, 0)) %>%
-  mutate(multiplier = direct, total_impact_2021 = sum(direct, indirect, multiplier)) %>%
-  select(indicator2, total_impact_2021)
+  mutate(multiplier = direct, total_impact_2022 = sum(direct, indirect, multiplier)) %>%
+  select(indicator2, total_impact_2022)
 
 TABLE_ImpactChange.df <- TABLE_ImpactChange.df %>%
-  left_join(TABLE_ImpactChange_2021, by = "indicator2") %>%
-  mutate(total_change = total_impact-total_impact_2021, `PERCENTAGE CHANGE` = total_change/total_impact_2021*100, 
+  left_join(TABLE_ImpactChange_2022, by = "indicator2") %>%
+  mutate(total_change = total_impact-total_impact_2022, `PERCENTAGE CHANGE` = total_change/total_impact_2022*100, 
          `PERCENTAGE CHANGE` = round(`PERCENTAGE CHANGE`, 1)) %>%
   arrange(desc(total_impact)) %>%
   rename(Indicator = indicator2)
@@ -194,7 +194,7 @@ CHART_Trend.df <- econ_impact.df %>%
 
 pCHART_Trend <- ggplot(data = CHART_Trend.df, aes(x = year, y = value/10^12)) +
   geom_line (size = 0.75, color = 'red') +
-  scale_x_continuous (breaks = c(2008:2022)) +
+  scale_x_continuous (breaks = c(2008:2023)) +
   labs(y = "Total Cost (Constant 2022 US$ PPP, trillions)")
 
 
@@ -229,7 +229,7 @@ pCHART_YOYTrend <- CHART_YOYTrend.df %>%
   geom_bar(stat = "identity", aes(fill = colour_group)) +
   scale_fill_manual(values = c("Red" = "red", "Green" = "#53C1AB", "Grey" = "darkgrey"))  +
   scale_y_continuous(labels = scales::percent, limits = c(-0.1, 0.1))+
-  scale_x_continuous(breaks = seq(min(tab_YOYTrend$year), max(tab_YOYTrend$year), by = 4))
+  scale_x_continuous(breaks = seq(min(CHART_YOYTrend.df$year), max(CHART_YOYTrend.df$year), by = 4))
 
 
 # Add theme
@@ -254,7 +254,7 @@ TABLE_ImpactChangeTrend.df <- econ_impact.df %>%
   group_by(indicator2, year) %>%
   summarise(value = sum(value)/1000000000, value = round(value, 1)) %>%
   pivot_wider(names_from = year, values_from = value) %>%
-  mutate(BILLIONS = `2022`-`2008`, `PERCENTAGE CHANGE` = BILLIONS/`2008`*100, 
+  mutate(BILLIONS = `2023`-`2008`, `PERCENTAGE CHANGE` = BILLIONS/`2008`*100, 
          `PERCENTAGE CHANGE` = round(`PERCENTAGE CHANGE`, 0)) %>%
   arrange(desc(`PERCENTAGE CHANGE`)) %>%
   rename(Indicator = indicator2)
@@ -283,11 +283,11 @@ pCHART_DomainTrend <- ggplot(CHART_DomainTrend.df, aes(x = year)) +
   geom_line(aes(y = AC1), color = "red", size = 1) +
   geom_line(aes(y = ISV1), color = "blue", size = 1) +
   scale_y_continuous(limits = c(0.80, 3), breaks = seq(0.80, 3, by = 0.20)) + 
-  scale_x_continuous(breaks = c(2008:2022)) +
+  scale_x_continuous(breaks = c(2008:2023)) +
   theme_minimal() +
-  annotate("text", x = max(CHART_domain.df$year), y = CHART_domain.df$VC1[nrow(CHART_domain.df)], label = "Violence Containment", vjust = -0.6, hjust = 1.5, color = "green") +
-  annotate("text", x = max(CHART_domain.df$year), y = CHART_domain.df$AC1[nrow(CHART_domain.df)], label = "Armed Conflict", vjust = 10, hjust = 1, color = "red") +
-  annotate("text", x = max(CHART_domain.df$year), y = CHART_domain.df$ISV1[nrow(CHART_domain.df)], label = "Interpersonal and Self-Inflicted Violence", vjust = 2, hjust = 1, color = "blue")
+  annotate("text", x = max(CHART_DomainTrend.df$year), y = CHART_DomainTrend.df$VC1[nrow(CHART_DomainTrend.df)], label = "Violence Containment", vjust = -0.6, hjust = 1.5, color = "green") +
+  annotate("text", x = max(CHART_DomainTrend.df$year), y = CHART_DomainTrend.df$AC1[nrow(CHART_DomainTrend.df)], label = "Armed Conflict", vjust = 10, hjust = 1, color = "red") +
+  annotate("text", x = max(CHART_DomainTrend.df$year), y = CHART_DomainTrend.df$ISV1[nrow(CHART_DomainTrend.df)], label = "Interpersonal and Self-Inflicted Violence", vjust = 2, hjust = 1, color = "blue")
 
 pCHART_DomainTrend <- f_ThemeTraining(plot = pCHART_DomainTrend, 
                                       chart_info = CHART_DomainTrend, 
@@ -330,8 +330,8 @@ CHART_ArmedViolence.df <- econ_impact.df %>%
 
 pCHART_ArmedViolence <- ggplot(CHART_ArmedViolence.df, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = indicator2)) +
   geom_rect() +
-  geom_text(data = tab_ArmedConflict, aes(x = 4.5, y = labelPosition, label = label), hjust = 1, size = 3) +  
-  geom_segment(data = tab_ArmedConflict, aes(x = 4, y = labelPosition, xend = 4.4, yend = labelPosition), color = "black") +  
+  geom_text(data = CHART_ArmedViolence.df, aes(x = 4.5, y = labelPosition, label = label), hjust = 1, size = 3) +  
+  geom_segment(data = CHART_ArmedViolence.df, aes(x = 4, y = labelPosition, xend = 4.4, yend = labelPosition), color = "black") +  
   scale_fill_brewer(palette = 4) +
   coord_polar(theta = "y") +
   xlim(c(2, 5.5)) +  
@@ -375,8 +375,8 @@ CHART_InterpersonalViolence.df <- econ_impact.df %>%
 
 pCHART_InterpersonalViolence <- ggplot(CHART_InterpersonalViolence.df, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = indicator2)) +
   geom_rect() +
-  geom_text(data = tab_InterpersonalViolence, aes(x = 4.5, y = labelPosition, label = label), hjust = 1, size = 3) +  
-  geom_segment(data = tab_InterpersonalViolence, aes(x = 4, y = labelPosition, xend = 4.4, yend = labelPosition), color = "black") +  
+  geom_text(data = CHART_InterpersonalViolence.df, aes(x = 4.5, y = labelPosition, label = label), hjust = 1, size = 3) +  
+  geom_segment(data = CHART_InterpersonalViolence.df, aes(x = 4, y = labelPosition, xend = 4.4, yend = labelPosition), color = "black") +  
   scale_fill_brewer(palette = 4) +
   coord_polar(theta = "y") +
   xlim(c(2, 5.5)) +  
@@ -421,8 +421,8 @@ indicator2 %in% c("Military expenditure",
 
 pCHART_ViolenceContainment <- ggplot(CHART_ViolenceContainment.df, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = indicator2)) +
   geom_rect() +
-  geom_text(data = tab_ViolenceContainment, aes(x = 4.5, y = labelPosition, label = label), hjust = 1, size = 3) +  
-  geom_segment(data = tab_ViolenceContainment, aes(x = 4, y = labelPosition, xend = 4.4, yend = labelPosition), color = "black") +  
+  geom_text(data = CHART_ViolenceContainment.df, aes(x = 4.5, y = labelPosition, label = label), hjust = 1, size = 3) +  
+  geom_segment(data = CHART_ViolenceContainment.df, aes(x = 4, y = labelPosition, xend = 4.4, yend = labelPosition), color = "black") +  
   scale_fill_brewer(palette = 4) +
   coord_polar(theta = "y") +
   xlim(c(2, 5.5)) +  
@@ -492,7 +492,7 @@ pCHART_PerCap <- f_ThemeTraining(plot = pCHART_PerCap,
 # military expenditure per capita and military expenditure as a % of GDP
 
 TABLE_MEx.df <- econ_impact.df %>%
-  dplyr::filter(year == max(year), indicator=="milex", subtype=="costusd") %>%
+  dplyr::filter(year == max(year), indicator=="milex", subtype=="costppp") %>%
   select(country, value) %>%
   arrange(desc(value)) %>%
   slice(1:10) %>%
@@ -500,22 +500,23 @@ TABLE_MEx.df <- econ_impact.df %>%
   rename("COUNTRY" = country, "MILITARY EXPENDITURE (TOTAL, $US BILLIONS)" = value)
 
 TABLE_PCapMEx.df <- econ_impact.df %>%
-  dplyr::filter(year == max(year), indicator=="milex", subtype %in% c("costusd", "pop")) %>%
+  dplyr::filter(year == max(year), indicator=="milex", subtype %in% c("costppp", "pop")) %>%
   pivot_wider(names_from = subtype, values_from = value) %>%
-  mutate(value=costusd/pop, value=round(value, 2)) %>%
+  mutate(value=costppp/pop, value=round(value, 2)) %>%
   arrange(desc(value)) %>%
   slice(1:10) %>%
   select(country, value)  %>%
   rename("COUNTRY" = country, "MILITARY EXPENDITURE (PER CAPITA, $US)" = value)
 
 TABLE_GDPMEx.df <- econ_impact.df %>%
-  dplyr::filter(year == max(year), indicator=="milex", subtype %in% c("costusd", "gdp")) %>%
+  dplyr::filter(year == max(year), indicator=="milex", subtype %in% c("costppp", "gdpconsppp")) %>%
   pivot_wider(names_from = subtype, values_from = value) %>%
-  mutate(value=costusd/gdp*100, value=round(value, 2)) %>%
+  mutate(value=costppp/gdpconsppp*100, value=round(value, 2)) %>%
   arrange(desc(value)) %>%
   slice(1:10) %>%
   select(country, value) %>%
   rename("COUNTRY" = country, "MILITARY EXPENDITURE (% OF GDP)" = value)
+
 
 ## -- CHART_EconImpact -----------------------------------------------------------
 # A bar chart showing total economic impact by region
@@ -557,8 +558,8 @@ CHART_EconImpactChange.df <- econ_impact.df %>%
   ungroup() %>%
   pivot_wider(names_from = year, values_from = total_impact) %>%
   group_by(region) %>%
-  mutate(perc_change = sum(`2022`-`2021`)/`2021`) %>%
-  arrange(desc(`2022`))
+  mutate(perc_change = sum(`2023`-`2022`)/`2022`) %>%
+  arrange(desc(`2023`))
 
 pCHART_EconImpactChange <- ggplot(CHART_EconImpactChange.df, aes(x = perc_change, y = reorder(region, `2022`), fill = perc_change >= 0)) +
   geom_bar(stat = "identity") + scale_fill_manual(values = c("green", "red"), guide = FALSE) +
@@ -586,7 +587,7 @@ TABLE_TenCountries.df <- econ_impact.df %>%
   mutate(econ_cost = sum(indirect, direct))
 
 tab_GDP <- econ_impact.df %>%
-  dplyr::filter(year==max(year), subtype=="gdp") %>%
+  dplyr::filter(year==max(year), subtype=="gdpconsppp") %>%
   select(country, year, value) %>%
   distinct(country, year, .keep_all = TRUE)
 

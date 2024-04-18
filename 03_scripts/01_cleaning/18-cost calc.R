@@ -111,7 +111,7 @@ uncost2 <- uncost %>%
 
 
 # ppp.conv <- ppp.conv %>%  select(-variablename) 
-
+uncost2$value <- as.numeric(as.character(uncost2$value))
 cost <- rbind(uncost2, unitcost.var2) %>% rename(costusd=value) %>% 
   left_join(ppp.conv, by=c("iso3c", "year")) %>% rename(con.median=value)
 
@@ -263,7 +263,7 @@ print(p)
 
 
 
-rio::export(econcost, "04_outputs/Economic Impact of Violence.xlsx")
+rio::export(econcost, "04_outputs/Economic Impact of Violence_v2.xlsx")
 
 
 

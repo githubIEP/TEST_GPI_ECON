@@ -49,7 +49,7 @@ test_interest <- test_interest %>% rename(`2022`=`2022 estimate`,`2023`=`2023 es
 
 vet_tmp <- left_join(test,test_interest)
 #vet_tmp <- vet_tmp %>%subset(year>2006) %>% mutate(value=value+interest) %>% select(year, value) %>%subset(year<2022)
-vet_tmp <- vet_tmp %>%subset(year>2006) %>% mutate(value=value+interest) %>% select(year, value) %>%subset(year<2023)
+vet_tmp <- vet_tmp %>%subset(year>2006) %>% mutate(value=value+interest) %>% select(year, value) %>%subset(year<2024)
 vet_tmp$iso3c = "USA"
 
 
@@ -57,9 +57,9 @@ vet_tmp <- vet_tmp %>% full_join(gpi.grid, by=c("iso3c","year")) %>%
   mutate(value=ifelse(is.na(value),0,value))
 
 
-
-vet_tmp <- subset(vet_tmp,!(iso3c=="PSE" & year<2015))
-vet_tmp <- subset(vet_tmp,!(iso3c=="SSD" & year<2010))
+# 
+# vet_tmp <- subset(vet_tmp,!(iso3c=="PSE" & year<2015))
+# vet_tmp <- subset(vet_tmp,!(iso3c=="SSD" & year<2010))
 
 vet_tmp <- vet_tmp %>%  rename(vet.int=value)
 
@@ -69,8 +69,10 @@ vet <- gpi.grid %>% left_join(vet, by = c("year", "iso3c"))
 
 vet <- vet %>% rename (geocode = iso3c, value = vet.int) %>% mutate (variablename = "Veteran Costs")
 
-vet <- f_index_data_pad(vet)
+vet <- vet %>% rename(iso3c = geocode) %>% rename(vet.int = value)
 
-vet <- vet %>% select (c(1, 2, 5)) %>% rename (iso3c = geocode, vet.int = imputed)
-
-vet <- gpi.grid %>% left_join(vet)
+# vet <- f_index_data_pad(vet)
+# 
+# vet <- vet %>% select (c(1, 2, 5)) %>% rename (iso3c = geocode, vet.int = imputed)
+# 
+# vet <- gpi.grid %>% left_join(vet)

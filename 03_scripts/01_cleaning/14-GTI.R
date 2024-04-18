@@ -1,4 +1,5 @@
 
+
  gti.sum <- rio::import ("02_data/processed/terrorism_tracker_data_FINAL.xlsx", sheet = "cleaned-condensed-tt-data")
  
  gti.sum <- gti.sum %>% select (geocode, year, deaths_total, injured_total)

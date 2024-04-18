@@ -71,8 +71,13 @@ priv.secu <- priv.secu %>% mutate(year = year+1)
 priv.secu <-   priv.secu %>% mutate(value=as.numeric(as.character(gsub(",","",value)))) %>%
   mutate(year=as.numeric(as.character(gsub(",","",year)))) 
 
+# 
+# priv.secu <- left_join(gpi.grid,priv.secu) %>% na.omit()
 
-priv.secu <- left_join(gpi.grid,priv.secu) %>% na.omit()
+# priv.secu <- gpi.grid %>% left_join(priv.secu, by = c("year", "iso3c"))
+# 
+# priv.secu <- priv.secu %>% group_by(iso3c) %>%
+#   fill(value, .direction = "downup")
 
 
 #Add in population

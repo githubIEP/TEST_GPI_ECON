@@ -80,7 +80,7 @@ gdp.wdi$gdp <- as.numeric(as.character(gdp.wdi$gdp))
 gdp.wdi$gdpconsppp <- as.numeric(as.character(gdp.wdi$gdpconsppp))
 
 
-gdp.wdi <- gdp.wdi %>% mutate (gdpcons = 1 / .87 * gdpcons) # turning WDI constant 2015 to constant 2022
+gdp.wdi <- gdp.wdi %>% mutate (gdpcons = 1 / .8226054 * gdpcons) # turning WDI constant 2015 to constant 2023
 
 
 
@@ -93,7 +93,7 @@ gdp.pc.constant <- wdi.data %>% dplyr::filter (variablename == "GDP per cap Cons
 
 gdp.pc.constant <- gdp.pc.constant %>% select (geocode, year, value) %>% rename (iso3c = geocode, gdp.pc.cons = value)
 
-gdp.pc.constant <- gdp.pc.constant %>% mutate (gdp.pc.cons = 1 / .87 * gdp.pc.cons) # turning constant 2015 to constant 2022
+gdp.pc.constant <- gdp.pc.constant %>% mutate (gdp.pc.cons = 1 / .8226054 * gdp.pc.cons) # turning constant 2015 to constant 2023
 
 # ==================================================================================================================================
 
