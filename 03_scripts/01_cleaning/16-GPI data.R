@@ -82,13 +82,15 @@ homicide <- gpidata %>%
   dplyr::select(c(`iso3c`, `year`, `indicator`, `value`))
 
 
+
+
 # 
-# homicide <- gpidata %>% 
-#   subset(indicator=="homicide rate") %>% 
-#   merge(pop[,c("iso3c","year","population")], by=c("iso3c", "year")) %>% 
-#   rename(pop=population) %>% 
-#   mutate(poprate=pop/100000) %>% 
-#   mutate(value=poprate*value) %>% 
+# homicide <- gpidata %>%
+#   subset(indicator=="homicide rate") %>%
+#   merge(pop[,c("iso3c","year","population")], by=c("iso3c", "year")) %>%
+#   rename(pop=population) %>%
+#   mutate(poprate=pop/100000) %>%
+#   mutate(value=poprate*value) %>%
 #   subset(select=c('iso3c','year','indicator','value'))
 
 
