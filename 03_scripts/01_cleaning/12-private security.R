@@ -60,13 +60,25 @@
 
 # private security  -------------------------------------------------------
 
+f_LibraryLoader(tidyverse,rio)
+
 #priv.secu <- read_csv("Data/private security numbers updated 2021.csv") %>% 
 priv.secu <- read_csv("02_data/processed/private security numbers updated 2021.csv") %>% 
   select(-`...1`) %>%
   gather(year,value, -c("country","iso3c")) %>% select(-country)
 
 priv.secu$year <- as.numeric(as.character(priv.secu$year))
-priv.secu <- priv.secu %>% mutate(year = year+1)
+
+latest_year = max(priv.secu$year)
+
+data_new <- priv.secu %>% 
+  filter(year == latest_year) %>%
+  mutate(year = latest_year+1)
+
+# Combine the original dataset with the new 2023 data
+priv.secu <- bind_rows(priv.secu, data_new)
+
+
 
 priv.secu <-   priv.secu %>% mutate(value=as.numeric(as.character(gsub(",","",value)))) %>%
   mutate(year=as.numeric(as.character(gsub(",","",year)))) 
