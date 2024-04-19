@@ -98,6 +98,13 @@ CHART_Composition = c(title = "Composition of the regional economic cost of viol
                       sheet = "Composition", source = "IEP Calculations", xtext = "", ytext = "PROPORTION OF REGIONAL ECONOMIC IMPACT OF VIOLENCE",
                       type = "Chart", position = "Normal")
 
+# Appendix table D.1
+
+TABLE_Appendix = c(title = "Economic Cost of Violence",
+                   sheet = "Appendix D.1", source = "IEP Calculations", xtext = "", ytext = "",
+                   type = "Table", position = "Normal")
+
+
 
 ### --- Loading Data
 
@@ -651,3 +658,64 @@ pCHART_Composition <- f_ThemeTraining(plot = pCHART_Composition,
   theme(legend.direction = "horizontal", legend.position = "top", axis.text.x = element_text(face = "bold")) +
   guides(fill = guide_legend(title = NULL))
 
+## -- TABLE_Appendix  -----------------------------------------------------------
+
+TABLE_Appendix.df <- econ_impact.df %>%
+  dplyr::filter(year == max(year), subtype=="costppp") %>%
+  group_by(country) %>%
+  summarise(value = sum(value)) %>% rename(costppp = value)
+
+
+tab_GDP <- econ_impact.df %>%
+  dplyr::filter(year==max(year), subtype=="gdpconsppp") %>%
+  select(country, year, value) %>%
+  distinct(country, year, .keep_all = TRUE)
+
+TABLE_Appendix.df <- TABLE_Appendix.df %>%
+  left_join(tab_GDP) %>%
+  group_by(country) %>%
+  summarise(perc_gdp = costppp/value, costppp) %>%
+  arrange(desc(perc_gdp)) %>%
+  mutate(perc_gdp = scales::percent(perc_gdp))
+
+tab_imp <- econ_impact.df %>%
+  dplyr::filter(year==max(year), subtype=="impact") %>%
+  select(country, year, value) %>%
+  group_by(country, year) %>%
+  summarise(value = sum(value))
+
+
+TABLE_Appendix.df <- TABLE_Appendix.df %>%
+  left_join(tab_imp) %>% 
+  rename(impact = value)
+
+
+tab_per_cap <- econ_impact.df %>%
+  dplyr::filter(year == max(year), subtype=="pop") %>%
+  select(country, year, value) %>%
+  group_by(country, year) %>%
+  distinct(country, year, .keep_all = TRUE) %>%
+  rename(pop = value) %>%
+  left_join(tab_imp) %>%
+  rename(impact = value) %>%
+  mutate(per_capita_impact = (impact/pop)) %>%
+  dplyr::select(c(`country`, `year`, `per_capita_impact`))
+
+TABLE_Appendix.df <- TABLE_Appendix.df %>%
+  left_join(tab_per_cap) %>%
+  dplyr::select(-c(`year`))
+
+TABLE_Appendix.df$costppp <- format(TABLE_Appendix.df$costppp, big.mark = ",")
+TABLE_Appendix.df$impact <- format(TABLE_Appendix.df$impact , big.mark = ",")
+TABLE_Appendix.df$per_capita_impact <- format(TABLE_Appendix.df$per_capita_impact , big.mark = ",")
+
+TABLE_Appendix.df <- TABLE_Appendix.df  %>%
+  mutate(Rank = row_number())
+
+TABLE_Appendix.df <- TABLE_Appendix.df %>%
+  rename(`Economic Cost of Violence as % of GDP, RANK` = Rank ) %>%
+  rename(`Country` = country) %>%
+  rename(`Economic Impact of Violence (US$ 2023 PPP)` = impact) %>%
+  rename(`Per Capita Impact (2023 US$ PPP` = per_capita_impact) %>%
+  rename(`Economic Cost of Violence as a percentage of GDP` = perc_gdp) %>%
+  rename(`Economic Cost of Violence (US$ 2023 PPP` = costppp)
