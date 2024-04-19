@@ -658,7 +658,7 @@ pCHART_Composition <- f_ThemeTraining(plot = pCHART_Composition,
   theme(legend.direction = "horizontal", legend.position = "top", axis.text.x = element_text(face = "bold")) +
   guides(fill = guide_legend(title = NULL))
 
-## -- TABLE_Appendix  -----------------------------------------------------------
+## -- TABLE_Appendix D.1 -----------------------------------------------------------
 
 TABLE_Appendix.df <- econ_impact.df %>%
   dplyr::filter(year == max(year), subtype=="costppp") %>%
