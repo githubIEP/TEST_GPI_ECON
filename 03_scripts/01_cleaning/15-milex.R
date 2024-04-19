@@ -3,6 +3,19 @@
 # gpidata <- rio::import("02_data/processed/Econ-costing-data-2023.xlsx") %>% 
 #   rename(iso3c=geocode, indicator = element)
 
+gpidata <- readRDS("02_data/processed/GPI_2024_EconomicCosting.rds")  
+
+
+gpidata <- pivot_longer(data = gpidata,
+                        cols = c(3:11),
+                        names_to = "element",
+                        values_to = "value")
+
+
+gpidata <- gpidata %>% 
+  rename(iso3c=geocode, indicator = element)
+
+
 gpidata <- gpidata %>% mutate (indicator = case_when (indicator == "Terrorism deaths" ~ "killed",
                                                       indicator == "milex" ~ "military expenditure (% gdp)",
                                                       indicator == "Fear % population" ~ "perceptions of criminality",
@@ -18,7 +31,8 @@ milex <- gpidata %>%
   mutate(value = value /100) %>%
   # dplyr::filter (year < 2022)
   dplyr::filter (year < 2022) %>%
-  dplyr::select(-c(`country`))
+  dplyr::select(-c(`country`, `peace_level`, `region`))
+  
 
 
 # Data for 2022 from SIPRI

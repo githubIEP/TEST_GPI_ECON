@@ -15,7 +15,7 @@ unitcost <- spread(unitcost, indicator, unitcost)
 
 unitcost2 <- cbind(ppp, unitcost)
 
-unitcost.scaled <- mutate_at(unitcost2,vars(3:15), funs(.*scale) )
+unitcost.scaled <- mutate_at(unitcost2,vars(4:15), funs(.*scale) )
 
 unitcost.scaled <- unitcost.scaled[,c(2,1,4:15)]
 

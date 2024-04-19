@@ -3,18 +3,29 @@
 
 #Deaths.from.Internal.Conflict" |indicator=="Deaths.from.External.Conflict
 
+# unitcost.var <- crime2 %>%
+#   spread(variablename, value) %>%
+#   left_join(homicide[,c("iso3c","year","value")], by=c("iso3c","year")) %>%
+#   rename(homicide=value) %>% left_join(incar[,c("iso3c", "year","value")]) %>%
+#   rename(incar=value) %>%
+#   left_join (conflict[,c("iso3c","year","battle_deaths")],
+#         by=c("iso3c","year")) %>%
+#   left_join(gti.sum[,c("iso3c","year","killed","wounded")], by=c("iso3c","year")) %>%
+#  left_join(fear, by=c("iso3c","year")) %>%
+#   left_join(suicide, by=c("iso3c", "year")) %>%
+#  left_join (unitcost.scaled, by=c("iso3c", "year"))
+
 unitcost.var <- crime2 %>% 
   spread(variablename, value) %>%
   left_join(homicide[,c("iso3c","year","value")], by=c("iso3c","year")) %>%
   rename(homicide=value) %>% left_join(incar[,c("iso3c", "year","value")]) %>%
   rename(incar=value) %>% 
   left_join (conflict[,c("iso3c","year","battle_deaths")],
-        by=c("iso3c","year")) %>% 
-  left_join(gti.sum[,c("iso3c","year","killed","wounded")], by=c("iso3c","year")) %>% 
- left_join(fear, by=c("iso3c","year")) %>% 
+             by=c("iso3c","year")) %>% 
+  left_join(gti.sum[,c("iso3c","year","killed")], by=c("iso3c","year")) %>% 
+  left_join(fear, by=c("iso3c","year")) %>% 
   left_join(suicide, by=c("iso3c", "year")) %>%  
- left_join (unitcost.scaled, by=c("iso3c", "year"))
-
+  left_join (unitcost.scaled, by=c("iso3c", "year"))
 
 
 unitcost.var <- unitcost.var %>% 
@@ -34,22 +45,31 @@ unitcost.var <- unitcost.var %>%
   mutate(battle_deaths.dir.cost=battle_deaths * homicide.direct)%>%
 
   # terrorism deaths
-  mutate(terrdeath.dir.cost=killed*homicide.direct, terrdeath.indir.cost=killed*homicide.indirect)%>%
+  mutate(terrdeath.dir.cost=killed*homicide.direct, terrdeath.indir.cost=killed*homicide.indirect)
   # terrorism wounded
-  mutate(wounded.dir.cost=wounded*violentassault.direct, wounded.indir.cost=wounded*violentassault.indirect)
+  # mutate(wounded.dir.cost=wounded*violentassault.direct, wounded.indir.cost=wounded*violentassault.indirect)
 
 
 unitcost.var <- merge(unitcost.var, refugidp[,c("iso3c","year","refugeidp")],
                       by=c("iso3c", 'year'))
 
+
 unitcost.var2 <- unitcost.var %>% 
-  subset(select=c(1:2,25:40)) %>% 
+  subset(select=c(1:2,24:37)) %>% 
   gather(indicator,value,-c(iso3c,year)) %>% 
   separate(indicator,c("indicator","type","cost")) %>% 
   subset(select=-cost) %>% mutate(type=ifelse(indicator=="refugeidp","indir",type)) %>% 
   mutate(type1=ifelse(type=="indir","indirect","direct")) %>% 
   subset(select=-type) %>% rename(type=type1)
 
+# unitcost.var2 <- unitcost.var %>% 
+#   subset(select=c(1:2,25:40)) %>% 
+#   gather(indicator,value,-c(iso3c,year)) %>% 
+#   separate(indicator,c("indicator","type","cost")) %>% 
+#   subset(select=-cost) %>% mutate(type=ifelse(indicator=="refugeidp","indir",type)) %>% 
+#   mutate(type1=ifelse(type=="indir","indirect","direct")) %>% 
+#   subset(select=-type) %>% rename(type=type1)
+# 
 
 
 # non unit cost vars ------------------------------------------------------
@@ -258,12 +278,12 @@ p = tmp %>% ggplot(aes(x = year, y = total/10^12)) +
   #                                18000000000000, 19000000000000, 20000000000000),
   #                     labels = c("15", "16", "17", "18", "19", "20")) +
   scale_x_continuous (breaks = c(2008:2023)) + 
-  labs(y = "Total Cost (Constant 2022 US$ PPP, trillions)")
+  labs(y = "Total Cost (Constant 2023 US$ PPP, trillions)")
 print(p)
 
 
 
-rio::export(econcost, "04_outputs/Economic Impact of Violence_v2.xlsx")
+rio::export(econcost, "04_outputs/Economic Impact of Violence.xlsx")
 
 
 

@@ -147,7 +147,7 @@ wdi.gdpc.ppp <- wdi.gdpc.ppp %>% mutate (scale = gdpc.ppp.con.x/gdpc.ppp.con.y)
 
 ppp <- wdi.gdpc.ppp %>% select (c(1, 2, 6)) %>% rename(iso3c = iso3c.x)
 
-rm(wdi.gdpc.ppp, ppp_us, wdi.data, wdi.all)
+rm(wdi.gdpc.ppp, ppp_us, wdi.data, wdi.all)    
 
 # =========================================================================================================
 
