@@ -24,7 +24,7 @@ SECTION3_EXPORT <- c(
   "CHART_CompPie","TABLE_ImpactChange","CHART_Trend", "CHART_YOYTrend",
   "TABLE_ImpactChangeTrend","CHART_DomainTrend","CHART_ArmedViolence","CHART_InterpersonalViolence",
   "CHART_ViolenceContainment","CHART_PerCap", "TABLE_MEx", "CHART_EconImpact", 
-  "CHART_EconImpactChange", "TABLE_TenCountries", "CHART_Composition")
+  "CHART_EconImpactChange", "TABLE_TenCountries", "CHART_Composition", "TABLE_Appendix")
 
 # Reset Counters
 figure_count = 0
