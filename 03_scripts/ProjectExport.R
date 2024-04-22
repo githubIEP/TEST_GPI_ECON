@@ -23,7 +23,7 @@ wbCHARTS_SECTION3 <- createWorkbook()
 SECTION3_EXPORT <- c(
   "CHART_CompPie","TABLE_ImpactChange","CHART_Trend", "CHART_YOYTrend",
   "TABLE_ImpactChangeTrend","CHART_DomainTrend","CHART_ArmedViolence","CHART_InterpersonalViolence",
-  "CHART_ViolenceContainment","CHART_PerCap", "TABLE_MEx", "CHART_EconImpact", 
+  "CHART_ViolenceContainment","CHART_PerCap", "TABLE_MEx", "TABLE_PCapMEx", "TABLE_GDPMEx", "CHART_EconImpact",
   "CHART_EconImpactChange", "TABLE_TenCountries", "CHART_Composition", "TABLE_Appendix")
 
 # Reset Counters

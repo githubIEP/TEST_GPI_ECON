@@ -16,19 +16,19 @@ library(iepsqlite)
 
 ### --- List of Standard Charts and Tables
 
-# Composition of the global economic impact of violence, 2022
+# Composition of the global economic impact of violence, 2023
 CHART_CompPie = c(title = "Composition of the global economic impact of violence, 2023",
                   sheet = "CompPie", source = "IEP Calculations", xtext = "", ytext = "",
                   type = "Chart", position = "Normal")
 
-# Change in the global economic impact of violence, billions of PPP 2022 US dollars, 2021–2022
+# Change in the global economic impact of violence, billions of PPP 2022 US dollars, 2022–2023
 
 TABLE_ImpactChange = c(title = "Change in the global economic impact of violence, billions of PPP 2023 US dollars, 2022–2023",
                        sheet = "ImpactChange", source = "IEP Calculations", xtext = "", ytext = "",
                        type = "Table", position = "Normal")
 
 
-# Trend in the global economic impact of violence, 2008–2022
+# Trend in the global economic impact of violence, 2008–2023
 
 CHART_Trend = c(title = "Trend in the global economic impact of violence, 2008–2023",
                   sheet = "Trend", source = "IEP Calculations", xtext = "", ytext = "",
@@ -38,7 +38,7 @@ CHART_YOYTrend = c(title = "Trend in the global economic impact of violence, 200
                 sheet = "TrendYOY", source = "IEP Calculations", xtext = "", ytext = "",
                 type = "Chart", position = "Normal")
 
-# Change in the global economic impact of violence, billions of PPP 2022 US dollars, 2008–2022
+# Change in the global economic impact of violence, billions of PPP 2023 US dollars, 2008–2023
 
 TABLE_ImpactChangeTrend = c(title = "Change in the global economic impact of violence, billions of PPP 2023 US dollars, 2008–2023",
               sheet = "ImpactChangeTrend", source = "IEP Calculations", xtext = "", ytext = "",
@@ -49,30 +49,45 @@ CHART_DomainTrend = c(title = "Trend in Domains (Indexed)",
                  sheet = "Domain", source = "IEP Calculations", xtext = "", ytext = "INDEXED CHANGE (2008=1)",
                  type = "Chart", position = "Normal")
 
-# Breakdown of the global economic impact of the Armed Conflict domain, 2022
+# Breakdown of the global economic impact of the Armed Conflict domain, 2023
 CHART_ArmedViolence = c(title = "Breakdown of the global economic impact of the Armed Conflict domain, 2023",
                       sheet = "ArmedViolence", source = "IEP Calculations", xtext = "", ytext = "",
                       type = "Chart", position = "Normal")
 
-# Composition of the economic impact of Interpersonal Violence and Self-inflicted Violence domain, 2022
+# Composition of the economic impact of Interpersonal Violence and Self-inflicted Violence domain, 2023
 CHART_InterpersonalViolence = c(title = "Composition of the economic impact of Interpersonal Violence and Self-inflicted Violence domain, 2023",
                   sheet = "Interpersonal", source = "IEP Calculations", xtext = "", ytext = "",
                   type = "Chart", position = "Normal")
 
-# Composition of the Violence Containment domain, 2022
+# Composition of the Violence Containment domain, 2023
 CHART_ViolenceContainment = c(title = "Composition of the Violence Containment domain, 2023",
                                 sheet = "ViolenceContainment", source = "IEP Calculations", xtext = "", ytext = "",
                                 type = "Chart", position = "Normal")
 
-# Per capita containment spending (military and internal security) by region, 2022 
+# Per capita containment spending (military and internal security) by region, 2023 
 CHART_PerCap = c(title = "Per capita containment spending (military and internal security) by region, 2023",
                               sheet = "ViolenceContainment", source = "IEP Calculations", xtext = "CONSTANT 2023 PPP, PER PERSON", ytext = "",
                               type = "Chart", position = "Normal")
 
-# Military expenditure: total, per capita, and as percentage of GDP, 2022
-TABLE_MEx = c(title = "Military expenditure: total, per capita, and as percentage of GDP, 2023",
+# Military expenditure: total, 2023
+TABLE_MEx = c(title = "Military expenditure: total, 2023",
                        sheet = "MEx", source = "IEP Calculations", xtext = "", ytext = "",
                        type = "Table", position = "Normal")
+
+
+# Military expenditure per capita, 2023
+TABLE_PCapMEx = c(title = "Military expenditure: per capita, 2023",
+                  sheet = "MEx", source = "IEP Calculations", xtext = "", ytext = "",
+                  type = "Table", position = "Normal")
+
+
+
+
+# Military expenditure as a percentage of GDP, 2023
+
+TABLE_GDPMEx = c(title = "Military expenditure: as percentage of GDP, 2023",
+                 sheet = "MEx", source = "IEP Calculations", xtext = "", ytext = "",
+                 type = "Table", position = "Normal")
 
 
 # Total economic impact by region
@@ -363,7 +378,7 @@ CHART_InterpersonalViolence.df <- econ_impact.df %>%
   dplyr::filter(year == max(year), subtype == "impact",
                 indicator2 %in% c("Homicide",
                                   "Violent crime",
-                                  "incarceration",
+                                  "Incarceration",
                                   "Fear",                                  
                                   "Suicide")) %>%
   group_by(indicator2) %>%
@@ -453,7 +468,7 @@ pCHART_ViolenceContainment <- f_ThemeTraining(plot = pCHART_ViolenceContainment,
 CHART_PerCap.df <- econ_impact.df %>%
   rename(ID_0 = iso3c) %>%
   add_region() %>%
-  dplyr::filter(year == max(year), subtype == "impact",
+  dplyr::filter(year == max(year), subtype == "costppp",
   indicator2 %in% c("Military expenditure", "Internal security expenditure",
                            "Private security", "Peacekeeping", "Peacebuilding")) %>%
   select(ID_0, region, indicator2, value) %>%
