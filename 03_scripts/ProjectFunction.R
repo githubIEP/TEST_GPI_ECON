@@ -27,9 +27,12 @@ f_LibraryLoader(tidyverse,
                 extrafont)
 
 
-
-f_ThemeTraining <- function(plot, chart_info, plottitle, xaxis, yaxis, xgridline, ygridline) {
-  finalcaption <- paste0("Source: ", chart_info[["source"]])
+f_ThemeTraining <- function(plot, chart_info, plottitle, xaxis, yaxis, xgridline, ygridline, include_source = TRUE) {
+  if (include_source) {
+    finalcaption <- paste0("Source: ", chart_info[["source"]])
+  } else {
+    finalcaption <- ""
+  }
   
   plot_labels <- labs(
     title = chart_info[["title"]],
@@ -383,69 +386,6 @@ f_PeaceLabels <- function(pScatter, xaxis = "Include", yaxis = "Include",
   return(p)
 }
 
-f_ThemeTraining <- function(plot, chart_info, plottitle, xaxis, yaxis, xgridline, ygridline) {
-  finalcaption <- paste0("Source: ", chart_info[["source"]])
-  
-  plot_labels <- labs(
-    title = chart_info[["title"]],
-    x = chart_info[["xtext"]],
-    y = chart_info[["ytext"]],
-    caption = finalcaption
-  )
-  
-  plot_base <- theme_minimal()
-  
-  plot_theme <- plot_base +
-    theme(text = element_text(family = HEAVY_FONT),
-          plot.title.position = "plot",
-          plot.subtitle = element_text(size = 9),
-          plot.caption.position = "plot",
-          plot.caption = element_text(hjust = 0, colour = "#888686", size = 7),
-          axis.text = element_text(colour = "#444444", size = 6.5, family = LIGHT_FONT),
-          axis.title = element_text(face = "bold", size = 7, family = HEAVY_FONT),
-          panel.grid.minor = element_blank(),
-          legend.title = element_blank(),
-          legend.text = element_text(size = 7, family = LIGHT_FONT),
-          axis.line.x = element_blank(),
-          axis.line.y = element_blank()
-    )
-  
-  if (plottitle == "Include") {
-    plot_theme <- plot_theme + theme(plot.title = element_text(size = 13, family = HEAVY_FONT))
-  } else {
-    plot_theme <- plot_theme + theme(plot.title = element_blank())
-  }
-  
-  if (xaxis == "Include") {
-    plot_theme <- plot_theme + theme(axis.line.x.bottom = element_line(colour = "#444444"))
-  }
-  
-  if (yaxis == "Include") {
-    plot_theme <- plot_theme + theme(axis.line.y = element_line(colour = "#444444"))
-  }
-  
-  if (ygridline == "Include") {
-    plot_theme <- plot_theme + theme(panel.grid.major.y = element_line(colour = "lightgrey"))
-  } else {
-    plot_theme <- plot_theme + theme(panel.grid.major.y = element_blank())
-  }
-  
-  if (xgridline == "Include") {
-    plot_theme <- plot_theme + theme(panel.grid.major.x = element_line(colour = "lightgrey"))
-  } else {
-    plot_theme <- plot_theme + theme(panel.grid.major.x = element_blank())
-  }
-  
-  # Apply themes and labels to the plot
-  plot <- plot + plot_labels + plot_theme
-  
-  # Adjust y-axis to position x-axis line at y=0
-  if (xaxis == "Include") {
-    plot <- plot + scale_y_continuous(expand = c(0,0))
-  }
-  
-  return(plot)
-}
 
 # f_TrainingSavePlots: This function saves the plot in three different sizes -----------
 #' This function looks at the type of object(eg chart, map, diagram) and saves the plot
