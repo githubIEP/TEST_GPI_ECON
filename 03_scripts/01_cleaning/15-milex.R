@@ -1,13 +1,5 @@
-# Data from 2008 to 2021 from Military Balance
-# 
-# gpidata <- rio::import("02_data/processed/Econ-costing-data-2023.xlsx") %>% 
-#   rename(iso3c=geocode, indicator = element)
-
-gpidata <- readRDS("02_data/processed/GPI_2024_EconomicCosting.rds")  
-
-
-gpidata <- pivot_longer(data = gpidata,
-                        cols = c(3:11),
+gpidata <- pivot_longer(data = GPI_DATA,
+                        cols = c(`population`, `battle_deaths`, `homicides`, `incarceration`, `milex`, `fear`, `terrorism_deaths`, `displaced`, `assessments`),
                         names_to = "element",
                         values_to = "value")
 
@@ -29,15 +21,15 @@ gpidata <- gpidata %>% mutate (indicator = case_when (indicator == "Terrorism de
 milex <- gpidata %>% 
   subset(indicator=="military expenditure (% gdp)") %>% 
   mutate(value = value /100) %>%
-  # dplyr::filter (year < 2022)
   dplyr::filter (year < 2022) %>%
   dplyr::select(-c(`country`, `peace_level`, `region`))
-  
+
 
 
 # Data for 2022 from SIPRI
 
-milex2023 <- read_excel("02_data/processed/SIPRI-Milex-data-1949-2022.xlsx", sheet = "Share of GDP", skip = 5) %>% select(-Notes) %>%
+milex2023 <- SIPRI_MILEX %>%
+  select(-Notes) %>%
   gather(year, value, -Country) %>% subset(year>2005) %>%
   mutate (year = as.numeric(year))%>%
   rename(country=Country) %>%
@@ -55,28 +47,40 @@ milex2023 <- read_excel("02_data/processed/SIPRI-Milex-data-1949-2022.xlsx", she
 
 # ===================================================================================
 
-milex <- milex %>% rbind (milex2023)
+milex <- milex %>%
+  rbind (milex2023)
 
 rm(milex2023)
 
 
-milex <- gpi.grid %>% left_join(milex)
+milex <- gpi.grid %>% 
+  left_join(milex)
 
-milex <- milex %>% rename (geocode = iso3c, variablename = indicator)
+milex <- milex %>% 
+  rename (geocode = iso3c, variablename = indicator)
 
-milex <- milex %>% group_by(geocode) %>%
+milex <- milex %>% 
+  group_by(geocode) %>%
   fill(value, .direction = "downup")
 
 # milex <- f_index_data_pad(milex)
 
-milex <- milex %>% select (c(1, 2, 4)) %>% rename (iso3c = geocode, milex = value)
+milex <- milex %>% 
+  select (c(`year`, `geocode`, `value`)) %>% 
+  rename (iso3c = geocode, milex = value)
 
-milex <- gpi.grid %>% left_join(milex)
+milex <- gpi.grid %>% 
+  left_join(milex)
 
 
-milex <- milex %>% left_join(gdp.wdi)
+milex <- milex %>% 
+  left_join(gdp.wdi)
 
-milex <- milex %>% mutate (milex = milex * gdp) %>% select (iso3c, year, milex)
+milex <- milex %>% 
+  mutate (milex = milex * gdp) %>%
+  select (iso3c, year, milex)
+
 milex <- milex[-938, ]
-milex <- milex %>% group_by(iso3c) %>%
+milex <- milex %>% 
+  group_by(iso3c) %>%
   fill(milex, .direction = "downup")

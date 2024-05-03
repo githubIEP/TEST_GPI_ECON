@@ -1,12 +1,6 @@
 #_________________________________________________________SUICIDE RATE_________________________________________________________________________________________________
-#Suicide mortality rate (per 100,000 population)
 
-########### WORLD BANK SUICIDE RATE ################
-
-
-#suicide <- f_get.wdi("all","SH.STA.SUIC.P5",2007,2021) %>% 
-# suicide <- f_get.wdi("all","SH.STA.SUIC.P5",2006,2022) %>% 
-suicide <- f_get.wdi("all","SH.STA.SUIC.P5",2006,2023) %>% 
+suicide <- f_get.wdi("all","SH.STA.SUIC.P5",2006,LATEST_YEAR) %>% 
   mutate (year = year + 1) %>%
   rename(rate=SH.STA.SUIC.P5) %>% rename(value=rate) %>% mutate(variablename="suicide_rate") %>%
   subset(!iso3c=="PSE") %>% subset(!iso3c=="KSV") %>% subset(!iso3c=="TWN")
@@ -46,18 +40,13 @@ suicide <- suicide %>%  left_join(Peace_and_region, by = "iso3c")
 
 suicide <- suicide   %>% left_join(suicide.region.average, by = c("region", "year"))
 
-suicide <- suicide %>% mutate (value = coalesce(value, average)) %>% select (c(1:3))
-
+suicide <- suicide %>% mutate (value = coalesce(value, average)) %>% select (c(`year`:`value`))
 
 rm(suicide.region.average, suicide_GBD)
 
-# 
-# 
-# suicide <- subset(suicide,!(iso3c=="PSE" & year<2014))
-# suicide <- subset(suicide,!(iso3c=="SSD" & year<2009))
-
 suicide <- suicide %>% left_join(pop) %>%  distinct() %>% mutate(value=(population/100000*value)) %>% select(-population) 
 suicide <- suicide %>% mutate(variablename="suicide_count") %>% select(iso3c,value, year) %>%  rename(suicidevalue=value)
+
 
 
 

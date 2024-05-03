@@ -2,8 +2,8 @@
 # Getting GDP per cap PPP Constant, GDP current, GDP Constant, GDP PPP Constant, GDP Deflator from WDI
 
 wdi.all <- f_get.wdi("all",c("NY.GDP.PCAP.PP.KD", "PA.NUS.PPPC.RF", "NY.GDP.DEFL.ZS",
-                           "NY.GDP.PCAP.CD", "NY.GDP.PCAP.KD"),
-                   2007,2023) %>% mutate(year = year+1)
+                             "NY.GDP.PCAP.CD", "NY.GDP.PCAP.KD"),
+                     FIRST_GPI_YEAR-1,LATEST_YEAR) %>% mutate(year = year+1)
 
 wdi.data <- wdi.all %>% 
   rename('GDP per cap PPP Constant 2017' = NY.GDP.PCAP.PP.KD,  
@@ -18,15 +18,15 @@ wdi.data <- gpi.grid %>% left_join(wdi.data, by = c("iso3c", "year"))
 wdi.data$country[wdi.data$iso3c == "KSV"] <- "Kosovo"
 wdi.data$country[wdi.data$iso3c =="TWN"] <- "Taiwan"
 
-wdi.data <- wdi.data %>% group_by (iso3c, country, year) %>% pivot_longer(cols = c(4:8)) %>%
-                         rename (variablename = name, geocode = iso3c) %>% ungroup()
-                                                                            
+wdi.data <- wdi.data %>% group_by (iso3c, country, year) %>% pivot_longer(cols = c(`GDP per cap PPP Constant 2017`:`GDP per cap Constant`)) %>%
+  rename (variablename = name, geocode = iso3c) %>% ungroup()
+
 
 
 # Imputation
 
 wdi.data.impute <- wdi.data %>% select (geocode, year, variablename, value) %>%
-                               dplyr::filter(complete.cases(value))
+  dplyr::filter(complete.cases(value))
 
 wdi.grid <- wdi.data %>% select (geocode, year, variablename)
 
@@ -54,11 +54,11 @@ wdi.data.impute <- wdi.data.impute %>%
   mutate(imputation_type = ifelse(is.na(imputation_type) & is.nan(reg_av), paste("Regional Average", max(year[!is.nan(reg_av)])), imputation_type)) %>%
   ungroup() %>%
   mutate (value = imputed) %>%
-  select (-c(5:8))
+  select (-c(`imputation_type`:`imputed`))
 
 
 wdi.data <- wdi.data.impute
-  
+
 rm(wdi.data.impute, wdi.grid)
 
 # =======================================================================================================================================
@@ -72,17 +72,36 @@ gdp.wdi <- gdp.wdi %>% rename (iso3c = geocode) %>% left_join (pop, by = c("iso3
 gdp.wdi <- gdp.wdi %>% mutate (value = value * population) %>% select (-population)
 
 gdp.wdi <- gdp.wdi %>% group_by (iso3c, year ) %>% pivot_wider(names_from = variablename) %>%
-                       rename (gdp = 'GDP per cap Current', gdpcons = 'GDP per cap Constant', gdpconsppp = 'GDP per cap PPP Constant 2017') %>%
-                       select (iso3c, year, gdp, gdpcons, gdpconsppp)
+  rename (gdp = 'GDP per cap Current', gdpcons = 'GDP per cap Constant', gdpconsppp = 'GDP per cap PPP Constant 2017') %>%
+  select (iso3c, year, gdp, gdpcons, gdpconsppp)
 
 gdp.wdi$gdpcons <- as.numeric(as.character(gdp.wdi$gdpcons))
 gdp.wdi$gdp <- as.numeric(as.character(gdp.wdi$gdp))
 gdp.wdi$gdpconsppp <- as.numeric(as.character(gdp.wdi$gdpconsppp))
 
+CONSTANT_PARA <- wdi.data %>%
+  filter(variablename == "GDP Deflator", geocode == "USA") 
 
-gdp.wdi <- gdp.wdi %>% mutate (gdpcons = 1 / .8226054 * gdpcons) # turning WDI constant 2015 to constant 2023
+calculate_ratio <- function(CONSTANT_PARA) {
+  
+  latest_value <- CONSTANT_PARA %>%
+    filter(year == max(year), value == max(value)) %>%
+    pull(value) 
+  
+  value_100 <- CONSTANT_PARA %>%
+    filter(value == 100) %>%
+    pull(value)
+  
+  ratio <- latest_value / value_100
+  
+  return(ratio)
+}
 
 
+ratio_result <- calculate_ratio(CONSTANT_PARA)
+
+
+gdp.wdi <- gdp.wdi %>% mutate (gdpcons = ratio_result * gdpcons) # turning WDI constant 2015 to constant 2023
 
 
 # =====================================================================================================================================
@@ -93,7 +112,7 @@ gdp.pc.constant <- wdi.data %>% dplyr::filter (variablename == "GDP per cap Cons
 
 gdp.pc.constant <- gdp.pc.constant %>% select (geocode, year, value) %>% rename (iso3c = geocode, gdp.pc.cons = value)
 
-gdp.pc.constant <- gdp.pc.constant %>% mutate (gdp.pc.cons = 1 / .8226054 * gdp.pc.cons) # turning constant 2015 to constant 2023
+gdp.pc.constant <- gdp.pc.constant %>% mutate (gdp.pc.cons = ratio_result * gdp.pc.cons) # turning constant 2015 to constant 2023
 
 # ==================================================================================================================================
 
@@ -105,7 +124,7 @@ deflator <- wdi.data %>% dplyr::filter (variablename == "GDP Deflator")
 deflator <- deflator %>% select (geocode, year, value) %>% rename (iso3c = geocode)
 
 
-deflator_2023 <- deflator %>% dplyr::filter (year == 2023)
+deflator_2023 <- deflator %>% dplyr::filter (year == LATEST_YEAR)
 
 deflator <- deflator %>% left_join(deflator_2023, by = "iso3c")
 
@@ -145,9 +164,8 @@ wdi.gdpc.ppp <- wdi.gdpc.ppp %>% left_join(ppp_us, by="year")
 
 wdi.gdpc.ppp <- wdi.gdpc.ppp %>% mutate (scale = gdpc.ppp.con.x/gdpc.ppp.con.y)
 
-ppp <- wdi.gdpc.ppp %>% select (c(1, 2, 6)) %>% rename(iso3c = iso3c.x)
+ppp <- wdi.gdpc.ppp %>% select (c(`iso3c.x`, `year`, `scale`)) %>% rename(iso3c = iso3c.x)
 
 rm(wdi.gdpc.ppp, ppp_us, wdi.data, wdi.all)    
 
 # =========================================================================================================
-

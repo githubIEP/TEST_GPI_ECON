@@ -1,12 +1,5 @@
-# UNIT COST
-
-#unit costs are in constant 2020 USD from the work done in the spreadsheet
-
 ##############   Much of the unit cost stuff is done in Excel. See spread sheet #####################
-
-#unitcost <- read_excel("Data/unit costs for gpi2022.xlsx", 
-unitcost <- read_excel("02_data/processed/unit costs for gpi2022.xlsx", 
-                          sheet = "unit costs r")
+unitcost <- UNIT_COST
 unitcost <- within(unitcost, indicator <- paste(Indicator, type,sep='.'))
 unitcost <- unitcost[,c("indicator", "unitcost")]
 
@@ -15,11 +8,8 @@ unitcost <- spread(unitcost, indicator, unitcost)
 
 unitcost2 <- cbind(ppp, unitcost)
 
-unitcost.scaled <- mutate_at(unitcost2,vars(4:15), funs(.*scale) )
+unitcost.scaled <- mutate_at(unitcost2,vars(`fear.indirect`:`violentassault.indirect`), funs(.*scale) )
+
 
 unitcost.scaled <- unitcost.scaled[,c(2,1,4:15)]
-
-
-
-
 

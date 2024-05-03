@@ -1,20 +1,3 @@
-#unit cost variables are in constant 2017 USD
-# except for refugee & IDP 
-
-#Deaths.from.Internal.Conflict" |indicator=="Deaths.from.External.Conflict
-
-# unitcost.var <- crime2 %>%
-#   spread(variablename, value) %>%
-#   left_join(homicide[,c("iso3c","year","value")], by=c("iso3c","year")) %>%
-#   rename(homicide=value) %>% left_join(incar[,c("iso3c", "year","value")]) %>%
-#   rename(incar=value) %>%
-#   left_join (conflict[,c("iso3c","year","battle_deaths")],
-#         by=c("iso3c","year")) %>%
-#   left_join(gti.sum[,c("iso3c","year","killed","wounded")], by=c("iso3c","year")) %>%
-#  left_join(fear, by=c("iso3c","year")) %>%
-#   left_join(suicide, by=c("iso3c", "year")) %>%
-#  left_join (unitcost.scaled, by=c("iso3c", "year"))
-
 unitcost.var <- crime2 %>% 
   spread(variablename, value) %>%
   left_join(homicide[,c("iso3c","year","value")], by=c("iso3c","year")) %>%
@@ -46,49 +29,33 @@ unitcost.var <- unitcost.var %>%
 
   # terrorism deaths
   mutate(terrdeath.dir.cost=killed*homicide.direct, terrdeath.indir.cost=killed*homicide.indirect)
-  # terrorism wounded
-  # mutate(wounded.dir.cost=wounded*violentassault.direct, wounded.indir.cost=wounded*violentassault.indirect)
-
 
 unitcost.var <- merge(unitcost.var, refugidp[,c("iso3c","year","refugeidp")],
                       by=c("iso3c", 'year'))
 
-
 unitcost.var2 <- unitcost.var %>% 
-  subset(select=c(1:2,24:37)) %>% 
+  subset(select=c(`iso3c`, 
+                  `year`, 
+                  `assault.dir.cost`,
+                  `assault.indir.cost`,
+                  `sexassault.dir.cost`,
+                  `sexassault.indir.cost`, 
+                  `suicide.dir.cost`, 
+                  `suicide.indir.cost`, 
+                  `homi.dir.cost`, 
+                  `homi.indir.cost`, 
+                  `incar.dir.cost`,
+                  `fear.indir.cost`,
+                  `battle_deaths.dir.cost`,
+                  `terrdeath.dir.cost`,
+                  `terrdeath.indir.cost`,
+                  `refugeidp`)) %>% 
   gather(indicator,value,-c(iso3c,year)) %>% 
   separate(indicator,c("indicator","type","cost")) %>% 
   subset(select=-cost) %>% mutate(type=ifelse(indicator=="refugeidp","indir",type)) %>% 
   mutate(type1=ifelse(type=="indir","indirect","direct")) %>% 
   subset(select=-type) %>% rename(type=type1)
 
-# unitcost.var2 <- unitcost.var %>% 
-#   subset(select=c(1:2,25:40)) %>% 
-#   gather(indicator,value,-c(iso3c,year)) %>% 
-#   separate(indicator,c("indicator","type","cost")) %>% 
-#   subset(select=-cost) %>% mutate(type=ifelse(indicator=="refugeidp","indir",type)) %>% 
-#   mutate(type1=ifelse(type=="indir","indirect","direct")) %>% 
-#   subset(select=-type) %>% rename(type=type1)
-# 
-
-
-# non unit cost vars ------------------------------------------------------
-# all in current USD, need to deflate
-
-
-
-# uncost <- milex %>% merge(pos.exp, by=c("iso3c","year"), all=TRUE) %>% 
-#   merge(priv.secu, by=c("iso3c","year"), all=TRUE) %>% 
-#   full_join(secu.agnecy,by=c("iso3c","year"),all=TRUE) %>% 
-#   full_join(small.arms,by=c("iso3c","year"),all=TRUE) %>% 
-#   full_join(peacebuilding,by=c("iso3c","year"),all=TRUE) %>% 
-#   full_join(peacekeeping,by=c("iso3c","year"),all=TRU) %>% 
-#   full_join(unhcr, by=c("iso3c","year"),all=TRUE) %>% 
-#   merge(vet, by=c("iso3c","year"),all=TRUE) %>% unique() %>% 
-#   merge(def.wdi2, by="year",all=TRUE) 
-#%>% 
- # subset(year >2006) %>% subset(year < 2022) 
- #subset(year >2007) %>% subset(year < 2023) 
 
 uncost <- milex %>% left_join(pos.exp, by=c("iso3c","year")) %>% 
   left_join(priv.secu, by=c("iso3c","year")) %>% 
@@ -104,7 +71,16 @@ uncost <- milex %>% left_join(pos.exp, by=c("iso3c","year")) %>%
 
 ########## convert all to constant 2022      ##########
 
-uncost <- mutate_at(uncost, vars(3:11), funs(./deflator))   # Fix later 3:11
+uncost <- mutate_at(uncost, vars(`milex`,
+                                 `intsecu`, 
+                                 `privsecu.cost`,
+                                 `secu.agnecy`,
+                                 `sarms`,
+                                 `peacebuilding`, 
+                                 `peacekeep`, 
+                                 `unhcr`, 
+                                 `vet.int`),
+                    funs(./deflator))   
 
 # GDP losses that are already in constant 2019 USD
 uncost <- left_join(uncost, gdplosses, by=c("iso3c","year"))
@@ -249,12 +225,25 @@ cost$indicator2[cost$indicator=="wounded"]="Terrorism"
 
 
 
+
+
 econcost <- cost %>% 
-  subset(select=c(1:5,7:10,12:21)) %>% 
+  subset(select=c(`iso3c`,
+                  `year`,
+                  `indicator`,
+                  `costusd`,
+                  `type`,
+                  `gdp`,
+                  `gdpcons`,
+                  `gdpconsppp`,
+                  `pop`,
+                  `costppp`,
+                  `impact`,
+                  `domain`,
+                  `indicator2`)) %>% 
   gather(subtype, value, -c(iso3c,year,indicator, type, domain,indicator2)) %>% 
   mutate(country=countrycode(iso3c,"iso3c","country.name")) 
 econcost$country[econcost$iso3c=="KSV"] <- "Kosovo"
-
 
 #fix errors
  
@@ -264,26 +253,14 @@ econcost$value[econcost$indicator=="gdplosses" & econcost$iso3c=="CHN"]=0
 
 econcost <- econcost %>% distinct()
 
-#econcost_aggr <- econcost %>% 
- # dplyr::filter (year == 2021 & subtype =='impact') %>%
-  #summarize (total_cost = sum(value))
-
-
-# tmp <- econcost %>% subset(subtype=="impact") %>% group_by(year, domain) %>% summarise(total=sum(value)) %>% ungroup() %>% spread(domain, total)
 tmp <- econcost %>% subset(subtype=="impact") %>% group_by(year) %>% summarise(total=sum(value)) %>% ungroup()
 
 p = tmp %>% ggplot(aes(x = year, y = total/10^12)) +
   geom_line (size = 0.75, color = 'red') + 
-  # scale_y_continuous (breaks = c(15000000000000, 16000000000000, 17000000000000, 
-  #                                18000000000000, 19000000000000, 20000000000000),
-  #                     labels = c("15", "16", "17", "18", "19", "20")) +
   scale_x_continuous (breaks = c(2008:2023)) + 
   labs(y = "Total Cost (Constant 2023 US$ PPP, trillions)")
 print(p)
 
 
-
-rio::export(econcost, "04_outputs/Economic Impact of Violence.xlsx")
-
-
+rio::export(econcost, "04_outputs/Economic Impact of Violence1.xlsx")
 

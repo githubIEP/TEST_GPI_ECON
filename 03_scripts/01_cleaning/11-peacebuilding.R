@@ -1,34 +1,22 @@
-
-
-
-#pb <- read.csv("Data/peacebuilding 2022.csv") %>% 
-pb <- read.csv("02_data/processed/peacebuilding 2022.csv") %>%   
-  mutate(iso3c=countrycode(Recipient,"country.name","iso3c")) %>%  mutate(iso3c=ifelse(Recipient=="Kosovo","KSV",iso3c))
+pb <- PEACEBUILDING %>%   
+  mutate(iso3c=countrycode(Recipient,"country.name","iso3c")) %>% 
+  mutate(iso3c=ifelse(Recipient=="Kosovo","KSV",iso3c))
 
 pb <- pb[pb$iso3c %in% pos,]
 
-
 # Check that that coutnrys are the ones we actually want
 country.list <- as.data.frame(table(pb$Recipient))
-
 rm(country.list)
 
+pb.countries <- PEACEBUILDING_FUNDING
 
-
-
-# pb.countries <- read_excel("Data/pb countries.xlsx")
-
-#pb.countries <- read_excel("Data/Peacebuilding Fund - Projects by Country.xlsx")
-pb.countries <- read_excel("02_data/processed/Peacebuilding Fund - Projects by Country.xlsx")
-
-pb.countries <- pb.countries %>%  mutate(iso3c=countrycode(Countries,"country.name","iso3c")) %>% 
+pb.countries <- pb.countries %>%  
+  mutate(iso3c=countrycode(Countries,"country.name","iso3c")) %>% 
   mutate(iso3c=ifelse(Countries=="Kosovo","KSV",iso3c)) %>%
   distinct(iso3c) %>%
   mutate(country=countrycode(iso3c,"iso3c", "country.name")) %>% mutate(country=ifelse(iso3c=="KSV","Kosovo",country))
 
 pb <- left_join(pb.countries,pb, by="iso3c" )
-
-
 
 pb <- pb %>% subset(Donor=="Official Donors, Total") %>% 
   subset(Channel=="All Channels") %>% 
@@ -40,31 +28,24 @@ pb <- pb %>% subset(Donor=="Official Donors, Total") %>%
   subset(Flow.type=="Gross Disbursements") 
 
 
-pb <- pb %>% mutate(Year = Year+3) %>% group_by(Year, iso3c, Recipient) %>% 
+pb <- pb %>% mutate(Year = Year+PEACEBUILDING_YEAR) %>% 
+  group_by(Year, iso3c, Recipient) %>% 
   summarise(value=sum(Value, na.rm = TRUE)) %>% mutate(variablename = "peacebuilding") %>%
   rename(country=Recipient) %>%
   rename(year = "Year") 
-# 
-# 
-# pb <- subset(pb,!(iso3c=="PSE" & year<2015))
-# pb <- subset(pb,!(iso3c=="SSD" & year<2010))
 
 
 pb$value <- pb$value*10^6
 
-peacebuilding <- pb %>% select(iso3c,year,value) %>% rename(peacebuilding=value) %>% 
+peacebuilding <- pb %>% 
+  select(iso3c,year,value) %>% rename(peacebuilding=value) %>% 
   subset(year > 2006)
-#  subset(year > 2007)
-
-
 
 rm(pb.countries)
 
+peacebuilding <- gpi.grid %>% 
+  left_join(peacebuilding) 
 
-peacebuilding <- gpi.grid %>% left_join(peacebuilding) 
-
-
-peacebuilding <- peacebuilding %>% mutate (peacebuilding = case_when(is.na(peacebuilding) ~ 0,
-                                                       TRUE ~ peacebuilding ))
-
-
+peacebuilding <- peacebuilding %>%
+  mutate (peacebuilding = case_when(is.na(peacebuilding) ~ 0,
+                                    TRUE ~ peacebuilding ))

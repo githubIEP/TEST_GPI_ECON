@@ -214,7 +214,7 @@ pCHART_Trend <- ggplot(data = CHART_Trend.df, aes(x = year, y = value/10^12)) +
 
 
 pCHART_Trend <- f_ThemeTraining(plot = pCHART_Trend, 
-                                chart_info = CHART_Trend, 
+                                chart_info = CHART_Trend_YOYTrend, 
                                 plottitle = "", 
                                 xaxis = "Include", 
                                 yaxis = "Include", 
@@ -619,7 +619,7 @@ pCHART_EconImpact <- ggplot(CHART_EconImpact.df, aes(x = total_impact, y = reord
   scale_x_continuous(labels = scales::dollar_format(prefix = "$", big.mark = ","))                   
 
 pCHART_EconImpact <- f_ThemeTraining(plot = pCHART_EconImpact, 
-                                     chart_info = CHART_EconImpact, 
+                                     chart_info = CHART_EconImpactChange, 
                                      plottitle = "", 
                                      xaxis = "", 
                                      yaxis = "Include", 
